@@ -1,15 +1,87 @@
 <html>
 <head>
-    <link rel="stylesheet" href="main.css">
-    <script type="text/javascript" src="main.js"></script>
+    <!-- <script type="text/javascript" src="main.js"></script> -->
+    <script>
+    	function beforeGame() {
+    		setBalance(100);
+    	}
+    	function setBalance(balance){
+			document.getElementById("balance").innerText = "Balance: " + balance;
+		}
+   	</script>
+   	<style>
+   		.Box {
+				width: 100px;
+				height: 100px;
+				text-align: center;
+				font-size: 40pt;
+				font-weight: bold;
+				font-family: verdana;
+		}
+
+		.Title{
+			font-family: times new roman;
+			font-weight: italic;
+		}
+
+		.Balance{
+			font-family: times new roman;
+			font-size: 30pt;
+		}
+
+		.Hand{
+			font-family: times new roman;
+			font-size: 20pt;
+		}
+
+		a+a {
+			margin-left: 50px;
+		}
+   	</style>
 </head>
 
-<body>
-    <div class="deck">
-        <h1>A Deck of Cards</h1>
+<body onload = "beforeGame();">
+	<center>
+		<h1 class = "Title"> Welcome to BlackJack! </h1>
+		<!-- <h2 class = "Balance"> Balance: 100</h2> -->
+		
+		
+		<div id = "balance" class = "Balance"></div>
+		<br>
+		
+		<h2 class = "Hand"> Dealer's hand: </h2>
+		<table border = "30">
+			<tr>
+				<td id = "d1" class = "Box"></td>
+				<td id = "d2" class = "Box"></td>
+				<td id = "d3" class = "Box"></td>
+				<td id = "d4" class = "Box"></td>
+				<td id = "d5" class = "Box"></td>
+				<td id = "d6" class = "Box"></td>
+				<td id = "d7" class = "Box"></td>
+			</tr>
+		</table>
 
-        <a href="javascript:void(0)" class="btn" onclick="shuffle()">Shuffle</a>
-        <div id="deck"></div>
-    </div>
+		<br>
+		<br>
+		<br>
+
+		<h2 class = "Hand"> Player's hand: </h2>
+		<table border = "30">
+			<tr>
+				<td id = "p1" class = "Box"></td>
+				<td id = "p2" class = "Box"></td>
+				<td id = "p3" class = "Box"></td>
+				<td id = "p4" class = "Box"></td>
+				<td id = "p5" class = "Box"></td>
+				<td id = "p6" class = "Box"></td>
+				<td id = "p7" class = "Box"></td>
+			</tr>
+		</table>
+
+		<br>
+		<a href = "javascript:startGame();">HIT</a><a href = "javascript:beforeGame();">STAND</a>
+
+	</center>
 </body>
 </html>
