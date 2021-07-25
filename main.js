@@ -3,7 +3,7 @@ var suits = ["spades", "diamonds", "clubs", "hearts"];
 var values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 
 var suitsToChars = {"spades": "S", "diamonds": "D", "clubs": "C", "hearts": "H"};
-var valuesToNumbers = {"A": 11, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7
+var valuesToNumbers = {"A": 11, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7,
 "8": 8, "9": 9, "10": 10, "J": 10, "Q": 10, "K": 10};
 
 var LIMIT = 21;
@@ -25,7 +25,7 @@ function setAmount(user, amount) {
     document.getElementById(id).innerText = user + " total: " + amount;
 }
 
-function changeHand(user, index, data) {
+function changeHand(user, index, suit, value) {
     if (index < 1 || index > 7) {
         console.log("bad");
     }
@@ -33,8 +33,8 @@ function changeHand(user, index, data) {
     if (user == "Dealer"){
         u = "d"
     }
-    document.getElementById(u + index).innerText = data;
-    setAmount(user, 10);
+    document.getElementById(u + index).innerText = suit + "\n" + value;
+    setAmount(user, valuesToNumbers[value]);
 }
 
 
