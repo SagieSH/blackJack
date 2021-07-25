@@ -29,7 +29,7 @@ function setAmount(user, amount)
 }
 
 
-function changeHand(user, index, suit, value) {
+function changeHand(user, index, card) {
     if (index < 1 || index > 7) {
         console.log("bad");
     }
@@ -37,8 +37,8 @@ function changeHand(user, index, suit, value) {
     if (user == "Dealer"){
         u = "d"
     }
-    document.getElementById(u + index).innerText = suit + "\n" + value;
-    setAmount(user, valuesToNumbers[value]);
+    document.getElementById(u + index).innerText = card[Suit] + "\n" + card[Value]; // is it OK?
+    setAmount(user, valuesToNumbers[card[Value]]);
 }
 
 
@@ -101,45 +101,83 @@ function renderDeck(deck)
     }
 }
 
-function openTop(deck, user, index)
+var index = 0;
+var countAces = 0;
+var PlayerCount = 0;
+var DealerCount = 0;
+
+function hit(deck, user, amount)
 //opens the top card of the deck
 {
     if (deck.length <= 0){
         console.log("empty deck");
     }
+    index++;
     var card = deck.pop();
-    changeHand(user, index, suitsToChars[card[Value]]); //is it OK??
-    return card;
+    changeHand(user, index, card);
+    if (card[Value] == "A"){
+        countAces++;
+    }
+    amount = amount + valuesToNumbers[card[Value]] //is it OK?
+
+    return checkLimit(amount);
 }
 
-function checkLimit(count){
+function checkLimit(amount){
+    while (amount > LIMIT){
+        if (countAces == 0){
+            return 0;
+        }
+        //wait 1 second
+        countAces--;
 
+    }
 }
 
 function playerDecision()
-//TODO ask the user to "hit" or to "stand"
+//TODO ask the user to "hit" or to "stand" and returns it
 {
 
+}
+
+function changeAmount(user, amount, adding)
+{
+    var ret = amount + adding;
+    setAmount(user, ret);
+    return ret;
 }
 
 function userTurn(deck, user)
 {
     var openedCards = new Array();
-    var count = 0;
-    var card = openTop(deck);
-    openedCards.push(card);
-    count = count + valuesToNumbers(card[Value]) //is it OK?
-    card = openTop(deck);
-    openedCards.push(card);
-    count = count + valuesToNumbers(card[Value]) //is it OK?
+    var countAces = 0;
+    var amount = 0;
 
-    var continuePlay = "hit";
-    while (continuePlay != "stand"){
-        card = openTop(deck);
-        openedCards.push(card);
-        count = count + valuesToNumbers(card[Value]) //is it OK?
+    amount = hit(deck, user, amount);
 
+    amount = hit(deck, user, amount);
+
+    if (user == "Player"){
+        var continuePlay = playerDecision();
+        while (continuePlay != "stand" || inGame == 1){
+            card = hit(deck, user);
+            openedCards.push(card);
+            count = count + valuesToNumbers[card[Value]] //is it OK?
+        }
     }
+
+    else if (user == "Dealer"){
+        while (inGame == 1){
+            card = hit(deck, user);
+            openedCards.push(card);
+            count = count + valuesToNumbers[card[Value]] //is it OK?
+        }
+    }
+}
+
+function clean()
+{
+    //TODO clean: index, all the cards, countAces, 
 }
 
 function endGame()
