@@ -28,8 +28,8 @@ function setAmount(user, amount)
     document.getElementById(id).innerText = user + " total: " + amount;
 }
 
-function changeHand(user, index, data) 
-{
+
+function changeHand(user, index, suit, value) {
     if (index < 1 || index > 7) {
         console.log("bad");
     }
@@ -37,8 +37,8 @@ function changeHand(user, index, data)
     if (user == "Dealer"){
         u = "d"
     }
-    document.getElementById(u + index).innerText = data;
-    setAmount(user, 10);
+    document.getElementById(u + index).innerText = suit + "\n" + value;
+    setAmount(user, valuesToNumbers[value]);
 }
 
 
