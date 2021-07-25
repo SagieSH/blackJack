@@ -2,30 +2,7 @@
 <head>
     <!-- <script type="text/javascript" src="main.js"></script> -->
     <script>
-        function beforeGame() {
-            setBalance(100);
-        }
-        function setBalance(balance){
-            document.getElementById("balance").innerText = "Balance: " + balance;
-        }
-        function setAmount(user, amount) {
-            id = "totalPlayer";
-            if (user == "Dealer") {
-                id = "totalDealer";
-            }
-            document.getElementById(id).innerText = user + " total: " + amount;
-        }
-        function changeHand(user, index, data) {
-            if (index < 1 || index > 7) {
-                console.log("bad");
-            }
-            var u = "p";
-            if (user == "Dealer"){
-                u = "d"
-            }
-            document.getElementById(u + index).innerText = data;
-            setAmount(user, 10);
-        }
+        
     </script>
     <style>
         .Box {
