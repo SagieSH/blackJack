@@ -2,86 +2,105 @@
 <head>
     <!-- <script type="text/javascript" src="main.js"></script> -->
     <script>
-    	function beforeGame() {
-    		setBalance(100);
-    	}
-    	function setBalance(balance){
-			document.getElementById("balance").innerText = "Balance: " + balance;
-		}
-   	</script>
-   	<style>
-   		.Box {
-				width: 100px;
-				height: 100px;
-				text-align: center;
-				font-size: 40pt;
-				font-weight: bold;
-				font-family: verdana;
-		}
+        function beforeGame() {
+            setBalance(100);
+        }
+        function setBalance(balance){
+            document.getElementById("balance").innerText = "Balance: " + balance;
+        }
+        function setAmount(user, amount) {
+            id = "totalPlayer";
+            if (user == "Dealer") {
+                id = "totalDealer";
+            }
+            document.getElementById(id).innerText = user + " total: " + amount;
+        }
+        function changeHand(user, index, data) {
+            if (index < 1 || index > 7) {
+                console.log("bad");
+            }
+            var u = "p";
+            if (user == "Dealer"){
+                u = "d"
+            }
+            document.getElementById(u + index).innerText = data;
+            setAmount(user, 10);
+        }
+    </script>
+    <style>
+        .Box {
+                width: 100px;
+                height: 100px;
+                text-align: center;
+                font-size: 40pt;
+                font-weight: bold;
+                font-family: verdana;
+        }
 
-		.Title{
-			font-family: times new roman;
-			font-weight: italic;
-		}
+        .Title{
+            font-family: times new roman;
+            font-weight: italic;
+        }
 
-		.Balance{
-			font-family: times new roman;
-			font-size: 30pt;
-		}
+        .Balance{
+            font-family: times new roman;
+            font-size: 30pt;
+        }
 
-		.Hand{
-			font-family: times new roman;
-			font-size: 20pt;
-		}
+        .Hand{
+            font-family: times new roman;
+            font-size: 20pt;
+        }
 
-		a+a {
-			margin-left: 50px;
-		}
-   	</style>
+        a+a {
+            margin-left: 50px;
+        }
+    </style>
 </head>
 
 <body onload = "beforeGame();">
-	<center>
-		<h1 class = "Title"> Welcome to BlackJack! </h1>
-		<!-- <h2 class = "Balance"> Balance: 100</h2> -->
-		
-		
-		<div id = "balance" class = "Balance"></div>
-		<br>
-		
-		<h2 class = "Hand"> Dealer's hand: </h2>
-		<table border = "30">
-			<tr>
-				<td id = "d1" class = "Box"></td>
-				<td id = "d2" class = "Box"></td>
-				<td id = "d3" class = "Box"></td>
-				<td id = "d4" class = "Box"></td>
-				<td id = "d5" class = "Box"></td>
-				<td id = "d6" class = "Box"></td>
-				<td id = "d7" class = "Box"></td>
-			</tr>
-		</table>
+    <center>
+        <h1 class = "Title"> Welcome to BlackJack! </h1>
+        
+        
+        <div id = "balance" class = "Balance"></div>
+        <br>
+        
+        <h2 class = "Hand"> Dealer's hand: </h2>
+        <table border = "30">
+            <tr>
+                <td id = "d1" class = "Box" onclick="changeHand('Dealer', 1, 'KH'); "></td>
+                <td id = "d2" class = "Box"></td>
+                <td id = "d3" class = "Box"></td>
+                <td id = "d4" class = "Box"></td>
+                <td id = "d5" class = "Box"></td>
+                <td id = "d6" class = "Box"></td>
+                <td id = "d7" class = "Box"></td>
+            </tr>
+        </table>
+        <div id = "totalDealer" class = "Balance"></div>
 
-		<br>
-		<br>
-		<br>
+        <br>
+        <br>
+        <br>
 
-		<h2 class = "Hand"> Player's hand: </h2>
-		<table border = "30">
-			<tr>
-				<td id = "p1" class = "Box"></td>
-				<td id = "p2" class = "Box"></td>
-				<td id = "p3" class = "Box"></td>
-				<td id = "p4" class = "Box"></td>
-				<td id = "p5" class = "Box"></td>
-				<td id = "p6" class = "Box"></td>
-				<td id = "p7" class = "Box"></td>
-			</tr>
-		</table>
+        <h2 class = "Hand"> Player's hand: </h2>
+        <table border = "30">
+            <tr>
+                <td id = "p1" class = "Box"></td>
+                <td id = "p2" class = "Box"></td>
+                <td id = "p3" class = "Box"></td>
+                <td id = "p4" class = "Box"></td>
+                <td id = "p5" class = "Box"></td>
+                <td id = "p6" class = "Box"></td>
+                <td id = "p7" class = "Box"></td>
+            </tr>
+        </table>
+        <div id = "totalPlayer" class = "Balance"></div>
 
-		<br>
-		<a href = "javascript:startGame();">HIT</a><a href = "javascript:beforeGame();">STAND</a>
+        <br>
+        <a href = "javascript:startGame();">HIT</a><a href = "javascript:beforeGame();">STAND</a>
 
-	</center>
+    </center>
 </body>
 </html>
