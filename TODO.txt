@@ -3,3 +3,4 @@ Make cards use icons
 clean the table when "New Game" is pressed
 Add a page where the players choose sides
 Deal with aces
+Blackjack wins 21
