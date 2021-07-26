@@ -237,7 +237,7 @@ function cleanTable() {
     for (var i = 1; i < indexInTable[userToIndex["Dealer"]]; i++){
         document.getElementById("d" + i).innerText = "";
     }
-    
+
     document.getElementById("msg").innerText = "Press \'New Game\' to start again!";
 }
 
@@ -253,6 +253,8 @@ function endGame() {
 function gameSetup() {
     indexInTable = [1, 1];
     amount = [0, 0];
+    setAmount("Player", 0);
+    setAmount("Dealer", 0);
     hitJS("Dealer");
     hitJS("Player");
     hitJS("Player");
