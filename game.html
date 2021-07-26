@@ -34,13 +34,13 @@
 
 <body onload = "beforeGame();">
     <center>
-        <h1 class = "Title"> Welcome to BlackJack! </h1>
+        <h1 class="Title"> Welcome to BlackJack! </h1>
         
         
-        <div id = "balance" class = "Balance"></div>
+        <div id="balance" class="Balance"></div>
         <br>
         
-        <h2 class = "Hand"> Dealer's hand: </h2>
+        <h2 id="DealerMsg" class="Hand"></h2>
         <table border = "30">
             <tr>
                 <td id = "d1" class = "Box"></td>
@@ -52,15 +52,15 @@
                 <td id = "d7" class = "Box"></td>
             </tr>
         </table>
-        <div id = "totalDealer" class = "Balance"></div>
+        <div id="totalDealer" class="Balance"></div>
 
         <br>
         <br>
         <br>
 
-        <div id = "msg" class = "Balance"></div>
+        <div id="msg" class="Balance"></div>
 
-        <h2 class = "Hand"> Player's hand: </h2>
+        <h2 id="PlayerMsg" class="Hand"> Player's hand: </h2>
         <table border = "30">
             <tr>
                 <td id = "p1" class = "Box"></td>
@@ -80,6 +80,7 @@
         <br>
         <br>
         <a href = "javascript:singleGame();">New Game</a>
+        <a href = "start.html">Change Names</a>
 
     </center>
 </body>

@@ -1,6 +1,6 @@
 Deal with balance
-Make cards use icons
-Add a page where the players choose sides
 Deal with aces
 Blackjack wins 21
 Find out how to use sleep
+
+Make it use Ethereum

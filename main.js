@@ -1,6 +1,6 @@
 
-var suits = ["spades", "diamonds", "clubs", "hearts"];
-// var suits = ["♠", "♦", "♣", "♥"];
+// var suits = ["spades", "diamonds", "clubs", "hearts"];
+var suits = ["\u2660", "\u2662", "\u2667", "\u2665"];
 var values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 var valuesToNumbers = {"A": 11, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7,
 "8": 8, "9": 9, "10": 10, "J": 10, "Q": 10, "K": 10};
@@ -20,7 +20,15 @@ var countAces = 0;
 
 function beforeGame() {
     setBalance(100);
-    document.getElementById("msg").innerText = "Press \'New Game\' to start!"
+    document.getElementById("msg").innerText = "Press \'New Game\' to start!";
+    var parameters = window.location.search;
+
+    var indOfAmp = parameters.search("&")
+    var PlayerName = parameters.substring(8, indOfAmp);
+    var DealerName = parameters.substring(indOfAmp + 8);
+
+    document.getElementById("DealerMsg").innerText = "Dealer (" + DealerName + ") Hand:";
+    document.getElementById("PlayerMsg").innerText = "Player (" + PlayerName + ") Hand:";
 }
 
 
@@ -52,7 +60,7 @@ function placeCard(user, card) {
     if (user == "Dealer") {
         u = "d"
     }
-    document.getElementById(u + index).innerText = card["suit"] + "\n" + card["value"];
+    document.getElementById(u + index).innerText = card["value"] + card["suit"];
     addAmount(user, valuesToNumbers[card["value"]]);
     indexInTable[userToIndex[user]]++;
 }
