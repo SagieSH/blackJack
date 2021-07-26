@@ -20,7 +20,7 @@ var countAces = 0;
 
 function beforeGame() {
     setBalance(100);
-    document.getElementById("msg").innerText = "Please start a new game"
+    document.getElementById("msg").innerText = "Press \'New Game\' to start!"
 }
 
 
