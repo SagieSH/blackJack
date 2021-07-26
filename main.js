@@ -133,6 +133,17 @@ function standHTML() {
     playerTurn = false;
     document.getElementById("msg").innerText = "Now wait for the dealer to finish...";
     runDealer();
+    endGame();
+}
+
+
+function playerWin(){
+    //TODO updates the balances of the players
+}
+
+
+function dealerWin(){
+    //TODO updates the balances of the players
 }
 
 
@@ -143,6 +154,7 @@ function runDealer() {
 
     if (isAbove("Dealer", BUSTLIMIT)) {
         document.getElementById("msg").innerText = "Dealer bust. PLAYER WINS!";
+        //playerWin();
         return;
     }
     playerAmount = amount[userToIndex["Player"]];
@@ -155,10 +167,12 @@ function runDealer() {
 
     if (playerAmount > dealerAmount) {
         document.getElementById("msg").innerText = "PLAYER WINS!";
+        //playerWin();
         return;
     }
 
     document.getElementById("msg").innerText = "DEALER WINS!";
+    //dealerWin();
 }
 
 
@@ -216,13 +230,23 @@ function userTurn(deck, user) {
 
 
 function cleanTable() {
-    //TODO clean: all the cards
+    // clean: all the cards
+    for (var i = 1; i < indexInTable[userToIndex["Player"]]; i++){
+        document.getElementById("p" + i).innerText = "";
+    }
+    for (var i = 1; i < indexInTable[userToIndex["Dealer"]]; i++){
+        document.getElementById("d" + i).innerText = "";
+    }
+    
+    document.getElementById("msg").innerText = "Press \'New Game\' to start again!";
 }
 
 
 function endGame() {
     playerTurn = false;
     inGame = false;
+    document.getElementById("msg").innerText = "Game is over";
+    cleanTable();
 }
 
 
