@@ -43,7 +43,7 @@
         <h2 class = "Hand"> Dealer's hand: </h2>
         <table border = "30">
             <tr>
-                <td id = "d1" class = "Box" onclick="changeHand('Dealer', 1, 'hearts', 'A'); "></td>
+                <td id = "d1" class = "Box"></td>
                 <td id = "d2" class = "Box"></td>
                 <td id = "d3" class = "Box"></td>
                 <td id = "d4" class = "Box"></td>
@@ -57,6 +57,8 @@
         <br>
         <br>
         <br>
+
+        <div id = "msg" class = "Balance"></div>
 
         <h2 class = "Hand"> Player's hand: </h2>
         <table border = "30">
@@ -73,11 +75,11 @@
         <div id = "totalPlayer" class = "Balance"></div>
 
         <br>
-        <a href = "javascript:startGame();">HIT</a><a href = "javascript:beforeGame();">STAND</a>
+        <a href = "javascript:hitHTML();">HIT</a><a href = "javascript:standHTML();">STAND</a>
         <br>
         <br>
         <br>
-        <a href = "javascript:beforeGame();">New Game</a>
+        <a href = "javascript:singleGame();">New Game</a>
 
     </center>
 </body>
