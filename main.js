@@ -245,8 +245,7 @@ function cleanTable() {
 function endGame() {
     playerTurn = false;
     inGame = false;
-    document.getElementById("msg").innerText = "Game is over";
-    cleanTable();
+    // document.getElementById("msg").innerText = "Game is over";
 }
 
 
