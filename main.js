@@ -1,45 +1,47 @@
 
-// var suits = ["spades", "diamonds", "clubs", "hearts"];
-var suits = ["\u2660", "\u2662", "\u2667", "\u2665"];
-var values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-var valuesToNumbers = {"A": 11, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7,
+// let suits = ["spades", "diamonds", "clubs", "hearts"];
+let suits = ["\u2660", "\u2662", "\u2667", "\u2665"];
+let values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+let valuesToNumbers = {"A": 11, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7,
 "8": 8, "9": 9, "10": 10, "J": 10, "Q": 10, "K": 10};
 
-var userToIndex = {"Player": 0, "Dealer": 1};
+let userToIndex = {"Player": 0, "Dealer": 1};
 
-var deck = new Array();
-var playerTurn = false;     // indicates whether the player can hit or stand
-var inGame = false;         // indicates whether the player is currently in game
-var BUSTLIMIT = 22;
-var DEALLIMIT = 17;
+let deck = new Array();
+let playerTurn = false;     // indicates whether the player can hit or stand
+let inGame = false;         // indicates whether the player is currently in game
+let BUSTLIMIT = 22;
+let DEALLIMIT = 17;
 
-var indexInTable = [0, 0];
-var amount = [0, 0];
-var countAces = 0;
+let indexInTable = [0, 0];
+let amount = [0, 0];
+let countAces = 0;
+let balance = 100;
 
 
 function beforeGame() {
-    setBalance(100);
+	balance = 100;
+    setBalance(balance);
     document.getElementById("msg").innerText = "Press \'New Game\' to start!";
-    var parameters = window.location.search;
+    let parameters = window.location.search;
 
-    var indOfAmp = parameters.search("&")
-    var PlayerName = parameters.substring(8, indOfAmp);
-    var DealerName = parameters.substring(indOfAmp + 8);
+    let indOfAmp = parameters.search("&")
+    let PlayerName = parameters.substring(8, indOfAmp);
+    let DealerName = parameters.substring(indOfAmp + 8);
 
     document.getElementById("DealerMsg").innerText = "Dealer (" + DealerName + ") Hand:";
     document.getElementById("PlayerMsg").innerText = "Player (" + PlayerName + ") Hand:";
 }
 
 
-function setBalance(balance) {
-    document.getElementById("balance").innerText = "Balance: " + balance;
+function setBalance(newBalance) {
+    document.getElementById("balance").innerText = "Balance: " + newBalance;
 }
 
 
 function setAmount(user, newAmount) {
     amount[userToIndex[user]] = newAmount;
-    var id = "total" + user;
+    let id = "total" + user;
     document.getElementById(id).innerText = user + " total: " + newAmount;
 }
 
@@ -56,7 +58,7 @@ function placeCard(user, card) {
     if (index < 1 || index > 7) {
         console.log("bad");
     }
-    var u = "p";
+    let u = "p";
     if (user == "Dealer") {
         u = "d"
     }
@@ -68,11 +70,11 @@ function placeCard(user, card) {
 
 function getDeck() {
 
-    for(var i = 0; i < suits.length; i++)
+    for(let i = 0; i < suits.length; i++)
     {
-        for(var x = 0; x < values.length; x++)
+        for(let x = 0; x < values.length; x++)
         {
-            var card = {"value": values[x], "suit": suits[i]};
+            let card = {"value": values[x], "suit": suits[i]};
             deck.push(card);
         }
     }
@@ -82,11 +84,11 @@ function getDeck() {
 function shuffle() {
     // for 1000 turns
     // switch the values of two random cards
-    for (var i = 0; i < 1000; i++)
+    for (let i = 0; i < 1000; i++)
     {
-        var location1 = Math.floor((Math.random() * deck.length));
-        var location2 = Math.floor((Math.random() * deck.length));
-        var tmp = deck[location1];
+        let location1 = Math.floor((Math.random() * deck.length));
+        let location2 = Math.floor((Math.random() * deck.length));
+        let tmp = deck[location1];
 
         deck[location1] = deck[location2];
         deck[location2] = tmp;
@@ -113,6 +115,7 @@ function hitHTML() {
     }
     if (hitJS("Player")) {
         document.getElementById("msg").innerText = "Player bust. DEALER WINS!";
+        dealerWin();
         endGame();
     }
 }
@@ -123,7 +126,7 @@ function hitJS(user) {
     if (deck.length <= 0){
         console.log("empty deck");
     }
-    var card = deck.pop();
+    let card = deck.pop();
     placeCard(user, card);
     if (card["value"] == "A") {
         countAces++;
@@ -147,11 +150,15 @@ function standHTML() {
 
 function playerWin(){
     //TODO updates the balances of the players
+    balance += 10;
+    setBalance(balance);
 }
 
 
 function dealerWin(){
     //TODO updates the balances of the players
+    balance -= 10;
+    setBalance(balance);
 }
 
 
@@ -162,7 +169,7 @@ function runDealer() {
 
     if (isAbove("Dealer", BUSTLIMIT)) {
         document.getElementById("msg").innerText = "Dealer bust. PLAYER WINS!";
-        //playerWin();
+        playerWin();
         return;
     }
     playerAmount = amount[userToIndex["Player"]];
@@ -175,18 +182,18 @@ function runDealer() {
 
     if (playerAmount > dealerAmount) {
         document.getElementById("msg").innerText = "PLAYER WINS!";
-        //playerWin();
+        playerWin();
         return;
     }
 
     document.getElementById("msg").innerText = "DEALER WINS!";
-    //dealerWin();
+    dealerWin();
 }
 
 
 function sleep(milliseconds) {
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
+  let start = new Date().getTime();
+  for (let i = 0; i < 1e7; i++) {
     if ((new Date().getTime() - start) > milliseconds){
       break;
     }
@@ -212,18 +219,18 @@ function isAbove(user, limit) {
 
 
 function userTurn(deck, user) {
-    var countAces = 0;
-    // var amount = 0;
+    let countAces = 0;
+    // let amount = 0;
 
     amount = hitJS(user, amount);
     amount = hitJS(user, amount);
 
     if (user == "Player"){
-        var continuePlay = playerDecision();
+        let continuePlay = playerDecision();
         while (continuePlay != "stand" || inGameVar == 1){
             card = hitJS(user);
             openedCards.push(card);
-            count = count + valuesToNumbers[card["value"]] //is it OK?
+            count = count + valuesToNumbers[card["value"]]
         }
     }
 
@@ -231,7 +238,7 @@ function userTurn(deck, user) {
         while (inGameVar == 1){
             card = hitJS(user);
             openedCards.push(card);
-            count = count + valuesToNumbers[card["value"]] //is it OK?
+            count = count + valuesToNumbers[card["value"]]
         }
     }
 }
@@ -239,10 +246,10 @@ function userTurn(deck, user) {
 
 function cleanTable() {
     // clean: all the cards
-    for (var i = 1; i < indexInTable[userToIndex["Player"]]; i++){
+    for (let i = 1; i < indexInTable[userToIndex["Player"]]; i++){
         document.getElementById("p" + i).innerText = "";
     }
-    for (var i = 1; i < indexInTable[userToIndex["Dealer"]]; i++){
+    for (let i = 1; i < indexInTable[userToIndex["Dealer"]]; i++){
         document.getElementById("d" + i).innerText = "";
     }
 
