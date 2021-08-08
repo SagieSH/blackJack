@@ -194,7 +194,7 @@ function runDealer() {
 function sleep(milliseconds) {
   let start = new Date().getTime();
   for (let i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
+    if ((new Date().getTime() - start) > milliseconds) {
       break;
     }
   }
@@ -225,20 +225,20 @@ function userTurn(deck, user) {
     amount = hitJS(user, amount);
     amount = hitJS(user, amount);
 
-    if (user == "Player"){
+    if (user == "Player") {
         let continuePlay = playerDecision();
         while (continuePlay != "stand" || inGameVar == 1){
             card = hitJS(user);
             openedCards.push(card);
-            count = count + valuesToNumbers[card["value"]]
+            count = count + valuesToNumbers[card["value"]];
         }
     }
 
-    else if (user == "Dealer"){
-        while (inGameVar == 1){
+    else if (user == "Dealer") {
+        while (inGameVar == 1) {
             card = hitJS(user);
             openedCards.push(card);
-            count = count + valuesToNumbers[card["value"]]
+            count = count + valuesToNumbers[card["value"]];
         }
     }
 }
@@ -272,7 +272,7 @@ function gameSetup() {
     hitJS("Dealer");
     hitJS("Player");
     hitJS("Player");
-    document.getElementById("msg").innerText = "You may HIT or STAND"
+    document.getElementById("msg").innerText = "You may HIT or STAND";
 }
 
 
