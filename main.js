@@ -244,6 +244,10 @@ function userTurn(deck, user) {
 }
 
 
+function you_found_me(){
+    // hahahahhahaha
+}
+
 function cleanTable() {
     // clean: all the cards
     for (let i = 1; i < indexInTable[userToIndex["Player"]]; i++){
