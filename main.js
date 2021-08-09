@@ -15,7 +15,7 @@ let DEALLIMIT = 17;
 
 let indexInTable = [0, 0];
 let amount = [0, 0];
-let countAces = 0;
+let countAces = [0, 0];
 let balance = 100;
 
 
@@ -129,7 +129,7 @@ function hitJS(user) {
     let card = deck.pop();
     placeCard(user, card);
     if (card["value"] == "A") {
-        countAces++;
+        countAces[userToIndex[user]]++;
     }
 
     return isAbove(user, BUSTLIMIT);
@@ -179,15 +179,16 @@ function runDealer() {
 
 function isAbove(user, limit) {
     // returns whether we have passed the limit
+    userToIndex[user]
+    while (amount > LIMIT) {
+        if (countAces[userToIndex[user]] == 0) {
+            break;
+        }
+        //wait 1 second
+        countAces[userToIndex[user]]--;
+        addAmount(user, -10);
 
-    // while (amount > LIMIT){
-    //     if (countAces == 0) {
-    //         return 0;
-    //     }
-    //     //wait 1 second
-    //     countAces--;
-
-    // }
+    }
 
 
     return (amount[userToIndex[user]] >= limit);
@@ -208,40 +209,40 @@ function dealerWin(){
 }
 
 
-function sleep(milliseconds) {
-  let start = new Date().getTime();
-  for (let i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds) {
-      break;
-    }
-  }
-}
+// function sleep(milliseconds) {
+//   let start = new Date().getTime();
+//   for (let i = 0; i < 1e7; i++) {
+//     if ((new Date().getTime() - start) > milliseconds) {
+//       break;
+//     }
+//   }
+// }
 
 
-function userTurn(deck, user) {
-    let countAces = 0;
-    // let amount = 0;
+// function userTurn(deck, user) {
+//     let countAces = 0;
+//     // let amount = 0;
 
-    amount = hitJS(user, amount);
-    amount = hitJS(user, amount);
+//     amount = hitJS(user, amount);
+//     amount = hitJS(user, amount);
 
-    if (user == "Player") {
-        let continuePlay = playerDecision();
-        while (continuePlay != "stand" || inGameVar == 1){
-            card = hitJS(user);
-            openedCards.push(card);
-            count = count + valuesToNumbers[card["value"]];
-        }
-    }
+//     if (user == "Player") {
+//         let continuePlay = playerDecision();
+//         while (continuePlay != "stand" || inGameVar == 1){
+//             card = hitJS(user);
+//             openedCards.push(card);
+//             count = count + valuesToNumbers[card["value"]];
+//         }
+//     }
 
-    else if (user == "Dealer") {
-        while (inGameVar == 1) {
-            card = hitJS(user);
-            openedCards.push(card);
-            count = count + valuesToNumbers[card["value"]];
-        }
-    }
-}
+//     else if (user == "Dealer") {
+//         while (inGameVar == 1) {
+//             card = hitJS(user);
+//             openedCards.push(card);
+//             count = count + valuesToNumbers[card["value"]];
+//         }
+//     }
+// }
 
 
 function cleanTable() {
@@ -267,6 +268,7 @@ function endGame() {
 function gameSetup() {
     indexInTable = [1, 1];
     amount = [0, 0];
+    countAces = [0, 0];
     setAmount("Player", 0);
     setAmount("Dealer", 0);
     hitJS("Dealer");
