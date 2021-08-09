@@ -13,14 +13,14 @@ let inGame = false;         // indicates whether the player is currently in game
 let BUSTLIMIT = 22;
 let DEALLIMIT = 17;
 
-let indexInTable = [0, 0];
-let amount = [0, 0];
-let countAces = [0, 0];
-let balance = 100;
+let indexInTable;
+let amount;
+let countAces;
+let balance;
 
 
 function beforeGame() {
-	balance = 100;
+	balance = 1;
     setBalance(balance);
     document.getElementById("msg").innerText = "Press \'New Game\' to start!";
     let parameters = window.location.search;
@@ -132,7 +132,7 @@ function hitJS(user) {
         countAces[userToIndex[user]]++;
     }
 
-    return isAbove(user, BUSTLIMIT);
+    return isAbove(user, BUSTLIMIT, false);
 
 }
 
@@ -149,11 +149,11 @@ function standHTML() {
 
 
 function runDealer() {
-    while (!isAbove("Dealer", DEALLIMIT)) {
+    while (!isAbove("Dealer", DEALLIMIT, true)) {
         hitJS("Dealer");
     }
 
-    if (isAbove("Dealer", BUSTLIMIT)) {
+    if (isAbove("Dealer", BUSTLIMIT, false)) {
         document.getElementById("msg").innerText = "Dealer bust. PLAYER WINS!";
         playerWin();
         return;
@@ -177,12 +177,12 @@ function runDealer() {
 }
 
 
-function isAbove(user, limit) {
+function isAbove(user, limit, deal) {
     // returns whether we have passed the limit
-    userToIndex[user]
-    while (amount > LIMIT) {
-        if (countAces[userToIndex[user]] == 0) {
-            break;
+    
+    while (amount[userToIndex[user]] >= limit) {
+        if (countAces[userToIndex[user]] == 0 || deal) {
+            return true;
         }
         //wait 1 second
         countAces[userToIndex[user]]--;
@@ -191,7 +191,7 @@ function isAbove(user, limit) {
     }
 
 
-    return (amount[userToIndex[user]] >= limit);
+    return false;
 }
 
 
@@ -280,7 +280,10 @@ function gameSetup() {
 
 function singleGame() {
     //TODO get the amount of betting money of the user
-
+    if (balance <= 0) {
+        alert("Not enough balance!");
+        return;
+    }
     getDeck();
     shuffle();
     cleanTable();

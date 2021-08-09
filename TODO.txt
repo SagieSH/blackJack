@@ -1,12 +1,10 @@
 Add balance at start
 Do not allow negative balance
-Deal with aces
 Blackjack wins 21
-Change two names to name and address
-Add withdraw button
 
 optional:
 Find out how to use sleep
 Choose balance each game
 
-Make it use Ethereum
+Make it use Ethereum:
+Make withdraw button use Ethereum
