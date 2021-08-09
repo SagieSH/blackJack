@@ -26,7 +26,7 @@ function beforeGame() {
     let search = location.search.substring(1);
     let params = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
     if (isNaN(Number(params["Balance"])) || Number(params["Balance"]) <= 0) {
-        window.location.replace("start.html");
+        window.location.replace("index.html");
         alert("Deposit amount must be a positive integer!");
     }
     document.getElementById("msg").innerText = "Press \'New Game\' to start!";
