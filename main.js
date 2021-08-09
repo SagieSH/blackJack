@@ -20,21 +20,26 @@ let balance;
 
 
 function beforeGame() {
-	balance = 1;
-    setBalance(balance);
+    indexInTable = [1, 1];
+    amount = [0, 0];
+    countAces = [0, 0];
+    let search = location.search.substring(1);
+    let params = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+    if (isNaN(Number(params["Balance"])) || Number(params["Balance"]) <= 0) {
+        window.location.replace("start.html");
+        alert("Deposit amount must be a positive integer!");
+    }
     document.getElementById("msg").innerText = "Press \'New Game\' to start!";
-    let parameters = window.location.search;
-
-    let indOfAmp = parameters.search("&")
-    let PlayerName = parameters.substring(8, indOfAmp);
-    let DealerName = parameters.substring(indOfAmp + 8);
 
     document.getElementById("DealerMsg").innerText = "Dealer Hand:";
-    document.getElementById("PlayerMsg").innerText = "Player (" + PlayerName + ") Hand:";
+    document.getElementById("PlayerMsg").innerText = "Player (" + params["Player"] + ") Hand:";
+    setBalance(Number(params["Balance"]));
+    console.log(params["Address"]);
 }
 
 
 function setBalance(newBalance) {
+    balance = newBalance;
     document.getElementById("balance").innerText = "Balance: " + newBalance;
 }
 
@@ -197,15 +202,13 @@ function isAbove(user, limit, deal) {
 
 function playerWin(){
     //TODO updates the balances of the players
-    balance += 1;
-    setBalance(balance);
+    setBalance(balance + 1);
 }
 
 
 function dealerWin(){
     //TODO updates the balances of the players
-    balance -= 1;
-    setBalance(balance);
+    setBalance(balance - 1);
 }
 
 
