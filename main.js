@@ -29,7 +29,7 @@ function beforeGame() {
     let PlayerName = parameters.substring(8, indOfAmp);
     let DealerName = parameters.substring(indOfAmp + 8);
 
-    document.getElementById("DealerMsg").innerText = "Dealer (" + DealerName + ") Hand:";
+    document.getElementById("DealerMsg").innerText = "Dealer Hand:";
     document.getElementById("PlayerMsg").innerText = "Player (" + PlayerName + ") Hand:";
 }
 
