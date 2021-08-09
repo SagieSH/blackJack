@@ -148,20 +148,6 @@ function standHTML() {
 }
 
 
-function playerWin(){
-    //TODO updates the balances of the players
-    balance += 1;
-    setBalance(balance);
-}
-
-
-function dealerWin(){
-    //TODO updates the balances of the players
-    balance -= 1;
-    setBalance(balance);
-}
-
-
 function runDealer() {
     while (!isAbove("Dealer", DEALLIMIT)) {
         hitJS("Dealer");
@@ -191,16 +177,6 @@ function runDealer() {
 }
 
 
-function sleep(milliseconds) {
-  let start = new Date().getTime();
-  for (let i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds) {
-      break;
-    }
-  }
-}
-
-
 function isAbove(user, limit) {
     // returns whether we have passed the limit
 
@@ -215,6 +191,30 @@ function isAbove(user, limit) {
 
 
     return (amount[userToIndex[user]] >= limit);
+}
+
+
+function playerWin(){
+    //TODO updates the balances of the players
+    balance += 1;
+    setBalance(balance);
+}
+
+
+function dealerWin(){
+    //TODO updates the balances of the players
+    balance -= 1;
+    setBalance(balance);
+}
+
+
+function sleep(milliseconds) {
+  let start = new Date().getTime();
+  for (let i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds) {
+      break;
+    }
+  }
 }
 
 
@@ -243,10 +243,6 @@ function userTurn(deck, user) {
     }
 }
 
-
-function you_found_me(){
-    // hahahahhahaha
-}
 
 function cleanTable() {
     // clean: all the cards
