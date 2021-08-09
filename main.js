@@ -150,14 +150,14 @@ function standHTML() {
 
 function playerWin(){
     //TODO updates the balances of the players
-    balance += 10;
+    balance += 1;
     setBalance(balance);
 }
 
 
 function dealerWin(){
     //TODO updates the balances of the players
-    balance -= 10;
+    balance -= 1;
     setBalance(balance);
 }
 

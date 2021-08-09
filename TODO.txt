@@ -1,6 +1,11 @@
-Deal with balance
+Add balance at start
+Do not allow negative balance
 Deal with aces
 Blackjack wins 21
+Change two names to name and address
+
+optional:
 Find out how to use sleep
+Choose balance each game
 
 Make it use Ethereum
