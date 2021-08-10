@@ -22,20 +22,20 @@ contract BJTokenSale {
 
     function buyTokens(uint256 _numberOfTokens) public payable {
         require(msg.value > 0);
-        require(tokenContract.balanceOf(this) >= msg.value);
+        require(tokenContract.balanceOf(address(this)) >= msg.value);
         require(tokenContract.transfer(msg.sender, msg.value));
 
         tokensSold += msg.value;
 
-        Sell(msg.sender, msg.value);
+        emit Sell(msg.sender, msg.value);
     }
 
     function endSale() public {
         require(msg.sender == admin);
-        require(tokenContract.transfer(admin, tokenContract.balanceOf(this)));
+        require(tokenContract.transfer(admin, tokenContract.balanceOf(address(this))));
 
         // UPDATE: Let's not destroy the contract here
         // Just transfer the balance to the admin
-        admin.transfer(address(this).balance);
+        // admin.transfer(address(this).balance);
     }
 }
