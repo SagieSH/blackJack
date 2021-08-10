@@ -34,7 +34,6 @@ function beforeGame() {
     document.getElementById("DealerMsg").innerText = "Dealer Hand:";
     document.getElementById("PlayerMsg").innerText = "Player (" + params["Player"] + ") Hand:";
     setBalance(Number(params["Balance"]));
-    console.log(params["Address"]);
 }
 
 
