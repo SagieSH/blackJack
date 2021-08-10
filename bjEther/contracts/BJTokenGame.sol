@@ -2,7 +2,7 @@ pragma solidity ^0.5.0;
 
 import "./BJToken.sol";
 
-contract BJTokenSale {
+contract BJTokenGame {
     address admin;
     BJToken public tokenContract;
     uint256 public tokenPrice;
@@ -20,7 +20,7 @@ contract BJTokenSale {
     //     require(y == 0 || (z = x * y) / y == x);
     // }
 
-    function buyTokens(uint256 _numberOfTokens) public payable {
+    function buyTokens() public payable {
         require(msg.value > 0);
         require(tokenContract.balanceOf(address(this)) >= msg.value);
         require(tokenContract.transfer(msg.sender, msg.value));

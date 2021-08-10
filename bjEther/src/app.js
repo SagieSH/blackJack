@@ -1,6 +1,7 @@
 App = {
    contracts: {},
    web3Provider: null,
+   balance: 0,
 
    load: async () => {
       await App.loadWeb3()
@@ -49,12 +50,12 @@ App = {
 
    loadContract: async () => {
       // Create a JavaScript version of the smart contract
-      const bjTokenInst = await $.getJSON('BJToken.json')
-      App.contracts.BJToken = TruffleContract(bjTokenInst)
-      App.contracts.BJToken.setProvider(App.web3Provider)
+      const bjTokenGameInst = await $.getJSON('BJTokenGame.json')
+      App.contracts.BJTokenGame = TruffleContract(bjTokenGameInst)
+      App.contracts.BJTokenGame.setProvider(App.web3Provider)
 
       // Hydrate the smart contract with values from the blockchain
-      App.bjTokenInst = await App.contracts.BJToken.deployed()
+      App.bjTokenGameInst = await App.contracts.BJTokenGame.deployed()
    },
 
    render: async () => {
@@ -62,10 +63,39 @@ App = {
       // Render Account
       $('#account').html(App.account)
 
-      // // Render Tasks
-      // await App.renderTasks()
+      let search = location.search.substring(1);
+      let params = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+      if (isNaN(Number(params["Balance"])) || Number(params["Balance"]) <= 0) {
+         window.location.replace("index.html");
+         alert("Deposit amount must be a positive integer!");
+      }
+      App.setText("msg", "Press \'New Game\' to start!")
 
+      App.setText("DealerMsg", "Dealer Hand:")
+      App.setText("PlayerMsg", "Player (" + params["Player"] + ") Hand:")
+
+      App.setBalance(Number(params["Balance"]));
+
+   },
+   // --------------------------- game functions ---------------------------------------------------
+
+
+   setText: async (id, newValue) => {
+      $("#" + id).text(newValue)
+   },
+
+   setBalance: async (newBalance) => {
+      App.balance = newBalance;
+      App.setText("balance", "Balance: " + newBalance)
    }
+
+
+
+
+
+
+
+
 
    // renderTasks: async () => {
    //    // Load the total task count from the blockchain
