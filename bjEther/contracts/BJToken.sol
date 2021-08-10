@@ -38,6 +38,10 @@ contract BJToken {
         return true;
     }
 
+    function getBalance(address account) public returns (uint256 balance) {
+        return balanceOf[account];
+    }
+
     function approve(address _spender, uint256 _value) public returns (bool success) {
         allowance[msg.sender][_spender] = _value;
 

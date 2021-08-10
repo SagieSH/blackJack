@@ -74,6 +74,10 @@ App = {
       App.setText("DealerMsg", "Dealer Hand:")
       App.setText("PlayerMsg", "Player (" + params["Player"] + ") Hand:")
 
+      App.bjTokenGameInst.buyTokens({value: Number(params["Balance"])}).catch(function () { 
+         console.log("fuck me");
+      })
+
       App.setBalance(Number(params["Balance"]));
 
    },
