@@ -89,6 +89,11 @@ contract BJTokenGame {
     uint[2] countAces;
 
     uint indexInDeck;
+
+    function popDeck() public returns Card {
+        indexInDeck++;
+        return deck[indexInDeck - 1];
+    }
     
     function getDeck() {
 
@@ -96,9 +101,9 @@ contract BJTokenGame {
 
         for(uint i = 0; i < suits.length; i++)
         {
-            for(uint x = 0; x < values.length; x++)
+            for(uint j = 0; j < values.length; j++)
             {
-                card = Card(values[i], suits[x]);
+                card = Card(values[i], suits[j]);
                 deck[index] = card;
                 index++;
             }
@@ -126,7 +131,7 @@ contract BJTokenGame {
         }
     }
 
-    function checkIfPlayerTurn() {
+    function checkIfPlayerTurn() returns (bool){
         if (!playerTurn) {
             if (!inGame) {
                 emit Alert("Press \'New Game\' to start!");
@@ -138,7 +143,7 @@ contract BJTokenGame {
         return true;
     }
 
-    function hitHTML() {
+    function hitHTML() { // -------------------- using unknown functions
         if (!checkIfPlayerTurn()) {
             return;
         }
@@ -149,6 +154,21 @@ contract BJTokenGame {
         }
     }
 
+    function hitJS(user) returns (bool) {
+        //opens the top card of the deck
+        if (indexInDeck >= deck.length) {
+            emit Alert("empty deck");
+            return false;
+        }
+        Card card = popDeck();
+        placeCard(user, card);
+        if (card["value"] == "A") {
+            countAces[userToIndex[user]]++;
+        }
+
+        return isAbove(user, BUSTLIMIT, false);
+
+    }
 
     function runDealer() {
         while (!isAbove("Dealer", DEALLIMIT, true)) {
