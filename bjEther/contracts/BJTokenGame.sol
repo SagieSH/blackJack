@@ -115,7 +115,7 @@ contract BJTokenGame {
         
     }
 
-    function shuffle() {
+    function shuffle() public {
         for (uint i = 0; i < 1000; i++) {
             Card location1 = random() % deck.length;
             Card location2 = random() % deck.length;
@@ -126,7 +126,7 @@ contract BJTokenGame {
         }
     }
 
-    function checkIfPlayerTurn() {
+    function checkIfPlayerTurn() public returns(bool) {
         if (!playerTurn) {
             if (!inGame) {
                 emit Alert("Press \'New Game\' to start!");
@@ -138,7 +138,7 @@ contract BJTokenGame {
         return true;
     }
 
-    function hitHTML() {
+    function hitHTML() public {
         if (!checkIfPlayerTurn()) {
             return;
         }
@@ -150,13 +150,13 @@ contract BJTokenGame {
     }
 
 
-    function runDealer() {
+    function runDealer() public {
         while (!isAbove("Dealer", DEALLIMIT, true)) {
             hitJS("Dealer");
         }
 
         if (isAbove("Dealer", BUSTLIMIT, false)) {
-            document.getElementById("msg").innerText = "Dealer bust. PLAYER WINS!";
+            emit ChangeHTMLText("msg", "Dealer bust. PLAYER WINS!");
             playerWin();
             return;
         }
@@ -164,25 +164,25 @@ contract BJTokenGame {
         dealerAmount = amount[userToIndex["Dealer"]];
 
         if (playerAmount == dealerAmount) {
-            document.getElementById("msg").innerText = "It's a tie!";
+            emit ChangeHTMLText("msg", "It's a tie!");
             return;
         }
 
         if (playerAmount > dealerAmount) {
-            document.getElementById("msg").innerText = "PLAYER WINS!";
+            emit ChangeHTMLText("msg", "PLAYER WINS!");
             playerWin();
             return;
         }
 
-        document.getElementById("msg").innerText = "DEALER WINS!";
+        emit ChangeHTMLText("msg", "DEALER WINS!");
         dealerWin();
     }
 
-    function isAbove(user, limit, deal) {
+    function isAbove(string user, uint limit, bool deal) public returns(bool) {
         // returns whether we have passed the limit
         
         while (amount[userToIndex[user]] >= limit) {
-            if (countAces[userToIndex[user]] == 0 || deal) {
+            if ((countAces[userToIndex[user]] == 0) || deal) {
                 return true;
             }
             //wait 1 second
@@ -190,8 +190,7 @@ contract BJTokenGame {
             addAmount(user, -10);
 
         }
-
-
+        
         return false;
     }   
 }
