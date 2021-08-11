@@ -281,7 +281,6 @@ function gameSetup() {
 
 
 function singleGame() {
-    //TODO get the amount of betting money of the user
     if (balance <= 0) {
         alert("Not enough balance!");
         return;

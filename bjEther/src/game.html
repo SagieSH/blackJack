@@ -32,13 +32,13 @@
             font-size: 15pt;
         }
 
-        a+a {
+        button+button {
             margin-left: 25px;
         }
     </style>
 </head>
 
-<body>  <!-- onload = "beforeGame();" -->
+<body>
 
     <div class="topleft" id="account">Text here</div>
 
@@ -88,11 +88,14 @@
             <div id = "totalPlayer" class = "Balance"></div>
 
             <br>
-            <a href = "javascript:hitHTML();">HIT</a><a href = "javascript:standHTML();">STAND</a>
+            <button onclick="hitHTML();">HIT</button>
+            <button onclick="standHTML();">STAND</button>
             <br>    
             <br>
-            <a href = "javascript:singleGame();">New Game</a>
-            <a href = "start.html">Withdraw</a>
+            <button onclick="singleGame();">New Game</button>
+            <button onclick="App.withdraw()">Withdraw</button>
+            <br>
+            <a href = "index.html">Change name and Deposit more</a>
         </div>
     </center>
 

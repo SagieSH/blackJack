@@ -28,23 +28,26 @@ contract BJToken {
     //     totalSupply = _initialSupply;
     // }
 
-    function transfer(address _to, uint256 _value) public returns (bool success) {
-        require(balanceOf[msg.sender] >= _value);
+    // function transfer(address _to, uint256 _value) public returns (bool success) {
+    //     require(balanceOf[msg.sender] >= _value);
 
-        balanceOf[msg.sender] -= _value;
-        balanceOf[_to] += _value;
+    //     balanceOf[msg.sender] -= _value;
+    //     balanceOf[_to] += _value;
 
-        emit Transfer(msg.sender, _to, _value);
+    //     emit Transfer(msg.sender, _to, _value);
 
+    //     return true;
+    // }
+
+    function addAmount(address _to, uint256 _amount) public returns (bool success) {
+        balanceOf[_to] += _amount;
         return true;
     }
 
-    function mint(address _to, uint256 _amount) public returns (bool success) {
-        balanceOf[msg.sender] += _amount;
-    }
-
-    function getBalance(address account) public returns (uint256 balance) {
-        return balanceOf[account];
+    function deductAmount(address _to, uint256 _amount) public returns (bool success) {
+        require(balanceOf[_to] >= _amount);
+        balanceOf[_to] -= _amount;
+        return true;
     }
 
     function approve(address _spender, uint256 _value) public returns (bool success) {

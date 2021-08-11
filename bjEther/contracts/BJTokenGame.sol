@@ -8,6 +8,7 @@ contract BJTokenGame {
     uint256 public tokenPrice;
 
     event Sell(address _buyer, uint256 _amount);
+    event BalanceOf(address _account, uint256 _amount);
 
     constructor (BJToken _tokenContract, uint256 _tokenPrice) public {
         admin = msg.sender;
@@ -15,29 +16,31 @@ contract BJTokenGame {
         tokenPrice = _tokenPrice;
     }
 
-    // function multiply(uint x, uint y) internal pure returns (uint z) {
-    //     require(y == 0 || (z = x * y) / y == x);
-    // }
+    function multiply(uint x, uint y) internal pure returns (uint z) {
+        require(y == 0 || (z = x * y) / y == x);
+    }
 
-    function buyTokens() public payable {
+    function buyTokens(uint256 _numberOfTokens) public payable {
         require(msg.value > 0);
+        require(msg.value == multiply(_numberOfTokens, tokenPrice));
         
-        tokenContract.mint(msg.sender, msg.value);
+        tokenContract.addAmount(msg.sender, _numberOfTokens);
 
-
-        emit Sell(msg.sender, msg.value);
+        emit BalanceOf(msg.sender, tokenContract.balanceOf(msg.sender));
     }
 
-    function endSale() public {
-        require(msg.sender == admin);
-        require(tokenContract.transfer(admin, tokenContract.getBalance(address(this))));
+    function withdraw(uint256 _numberOfTokens) public {
+        require(_numberOfTokens > 0);
+        require(tokenContract.balanceOf(msg.sender) >= _numberOfTokens);
 
-        // UPDATE: Let's not destroy the contract here
-        // Just transfer the balance to the admin
-        // admin.transfer(address(this).balance);
+        msg.sender.transfer(_numberOfTokens * tokenPrice);
+
+        tokenContract.deductAmount(msg.sender, _numberOfTokens);
+
+        emit BalanceOf(msg.sender, tokenContract.balanceOf(msg.sender));
     }
 
-    function balanceOf(address account) public returns (uint256 balance) {
-        return tokenContract.getBalance(account);
-    }
+    //-------------------------------- Game Functions ----------------------------------------------
+
+
 }

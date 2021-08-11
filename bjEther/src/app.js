@@ -2,11 +2,13 @@ App = {
    contracts: {},
    web3Provider: null,
    balance: 0,
+   tokenPrice: 1000000000000000,
 
    load: async () => {
       await App.loadWeb3()
       await App.loadAccount()
       await App.loadContract()
+      await App.handleEvents()
       await App.render()
    },
 
@@ -60,6 +62,18 @@ App = {
       App.bjTokenGameInst = await App.contracts.BJTokenGame.deployed()
    },
 
+   handleEvents: async () => {
+      let balanceEvent = App.bjTokenGameInst.BalanceOf(function (error, result) {
+         if (error) {
+            console.log(error)
+         } else if (result.args._account != App.account) {
+            return
+         } else {
+            App.setBalance(result.args._amount)
+         }
+      })
+   },
+
    render: async () => {
 
       // Render Account
@@ -67,26 +81,33 @@ App = {
 
       let search = location.search.substring(1);
       let params = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
-      if (isNaN(Number(params["Balance"])) || Number(params["Balance"]) <= 0) {
+      if (isNaN(Number(params["Balance"])) || Number(params["Balance"]) < 0) {
          window.location.replace("index.html");
-         alert("Deposit amount must be a positive integer!");
+         alert("Deposit amount must be a non-negative integer!");
       }
       App.setText("msg", "Press \'New Game\' to start!")
 
       App.setText("DealerMsg", "Dealer Hand:")
       App.setText("PlayerMsg", "Player (" + params["Player"] + ") Hand:")
 
-      App.bjTokenGameInst.buyTokens({value: Number(params["Balance"])}).catch(function () { 
-         console.log("fuck me");
+      App.setBalance(0)
+
+      console.log("desired balance: " + Number(params["Balance"]))
+      App.bjTokenGameInst.buyTokens(Number(params["Balance"]), 
+         {value: App.tokenPrice * Number(params["Balance"])}).catch(function () { 
+         console.log("token error");
       })
-
-      console.log(await App.bjTokenGameInst.balanceOf(App.account))
-
-      App.setBalance(await App.bjTokenGameInst.balanceOf(App.account))
-
    },
-   // --------------------------- game functions ---------------------------------------------------
 
+   withdraw: async () => {
+      await App.bjTokenGameInst.withdraw(App.balance);
+   },
+
+   // --------------------------- html functions ---------------------------------------------------
+
+   getText: async (id) => {
+      return $("#" + id).text();
+   },
 
    setText: async (id, newValue) => {
       $("#" + id).text(newValue)
@@ -97,73 +118,16 @@ App = {
       App.setText("balance", "Balance: " + newBalance)
    }
 
+   // --------------------------- game functions ---------------------------------------------------
+
+   
+   
 
 
 
 
 
 
-
-
-   // renderTasks: async () => {
-   //    // Load the total task count from the blockchain
-   //    const taskCount = await App.todoList.taskCount()
-   //    const $taskTemplate = $('.taskTemplate')
-
-   //    // Render out each task with a new task template
-   //    for (var i = 1; i <= taskCount; i++) {
-   //       // Fetch the task data from the blockchain
-   //       const task = await App.todoList.tasks(i)
-   //       const taskId = task[0].toNumber()
-   //       const taskContent = task[1]
-   //       const taskCompleted = task[2]
-
-   //       // Create the html for the task
-   //       const $newTaskTemplate = $taskTemplate.clone()
-   //       $newTaskTemplate.find('.content').html(taskContent)
-   //       $newTaskTemplate.find('input')
-   //                               .prop('name', taskId)
-   //                               .prop('checked', taskCompleted)
-   //                               .on('click', App.toggleCompleted)
-
-   //       // Put the task in the correct list
-   //       if (taskCompleted) {
-   //          $('#completedTaskList').append($newTaskTemplate)
-   //       } else {
-   //          $('#taskList').append($newTaskTemplate)
-   //       }
-
-   //       // Show the task
-   //       $newTaskTemplate.show()
-   //    }
-   // },
-
-   // createTask: async () => {
-   //    App.setLoading(true)
-   //    const content = $('#newTask').val()
-   //    await App.todoList.createTask(content)
-   //    window.location.reload()
-   // },
-
-   // toggleCompleted: async (e) => {
-   //    App.setLoading(true)
-   //    const taskId = e.target.name
-   //    await App.todoList.toggleCompleted(taskId)
-   //    window.location.reload()
-   // },
-
-   // setLoading: (boolean) => {
-   //    App.loading = boolean
-   //    const loader = $('#loader')
-   //    const content = $('#content')
-   //    if (boolean) {
-   //       loader.show()
-   //       content.hide()
-   //    } else {
-   //       loader.hide()
-   //       content.show()
-   //    }
-   // }
 }
 
 $(() => {
