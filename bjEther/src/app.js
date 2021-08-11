@@ -73,6 +73,16 @@ App = {
          }
       })
 
+      let amountEvent = App.bjTokenGameInst.SetAmount(function (error, result) {
+         if (error) {
+            console.log(error)
+         } else if (result.args._account != App.account) {
+            return
+         } else {
+            App.setAmount(result.args._user, result.args._newAmount)
+         }
+      })
+
       let alertEvent = App.bjTokenGameInst.Alert(function (error, result) {
          if (error) {
             console.log(error)
@@ -87,9 +97,28 @@ App = {
          if (error) {
             console.log(error)
          } else if (result.args._account != App.account) {
-            return
+            return;
          } else {
             App.setText(result.args._id, result.args._newText)
+         }
+      })
+
+      let placeCardEvent = App.bjTokenGameInst.PlaceCard(function (error, result) {
+         if (error) {
+            console.log(error)
+         } else if (result.args._account != App.account) {
+            return
+         } else {
+            index = result.args._index
+            if (index < 1 || index > 7) {
+               console.log("bad");
+               return;
+            }
+            let u = "p";
+            if (user == "Dealer") {
+               u = "d"
+            }
+            App.setText(u + index, result.args._value + result.args._suit)
          }
       })
    },
@@ -136,6 +165,11 @@ App = {
    setBalance: async (newBalance) => {
       App.balance = newBalance;
       App.setText("balance", "Balance: " + newBalance)
+   }
+
+   setAmount: async (user, newAmount) => {
+      let id = "total" + user;
+      App.setText(id, user + " total: " + newAmount);
    }
 
    // --------------------------- game functions ---------------------------------------------------
