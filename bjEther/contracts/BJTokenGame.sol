@@ -121,4 +121,27 @@ contract BJTokenGame {
         }
     }
 
+    function checkIfPlayerTurn() {
+        if (!playerTurn) {
+            if (!inGame) {
+                alert("Press \'New Game\' to start!");
+            } else {
+                alert("It is not your turn!");
+            }
+            return false;
+        }
+        return true;
+    }
+
+    function hitHTML() {
+        if (!checkIfPlayerTurn()) {
+            return;
+        }
+        if (hitJS("Player")) {
+            document.getElementById("msg").innerText = "Player bust. DEALER WINS!";
+            dealerWin();
+            endGame();
+        }
+    }
+
 }
