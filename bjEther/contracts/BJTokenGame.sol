@@ -73,16 +73,14 @@ contract BJTokenGame {
     mapping(string => string)[52] deck;
 
 
-    // let deck = new Array();
-    // let playerTurn = false;     // indicates whether the player can hit or stand
-    // let inGame = false;         // indicates whether the player is currently in game
-    // let BUSTLIMIT = 22;
-    // let DEALLIMIT = 17;
+    bool playerTurn = false;        // indicates whether the player can hit or stand
+    bool inGame = false;            // indicates whether the player is currently in game
+    uint BUSTLIMIT = 22;
+    uint DEALLIMIT = 17;
 
-    // let indexInTable;
-    // let amount;
-    // let countAces;
-    // let balance;
+    uint[2] indexInTable;
+    uint[2] amount;
+    uint[2] countAces;
 
 
 }
