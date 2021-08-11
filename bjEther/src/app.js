@@ -72,6 +72,26 @@ App = {
             App.setBalance(result.args._amount)
          }
       })
+
+      let alertEvent = App.bjTokenGameInst.Alert(function (error, result) {
+         if (error) {
+            console.log(error)
+         } else if (result.args._account != App.account) {
+            return
+         } else {
+            alert(result.args._msg)
+         }
+      })
+
+      let htmlTextEvent = App.bjTokenGameInst.ChangeHTMLText(function (error, result) {
+         if (error) {
+            console.log(error)
+         } else if (result.args._account != App.account) {
+            return
+         } else {
+            App.setText(result.args._id, result.args._newText)
+         }
+      })
    },
 
    render: async () => {
