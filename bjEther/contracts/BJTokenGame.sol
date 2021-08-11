@@ -82,30 +82,25 @@ contract BJTokenGame {
     uint[2] amount;
     uint[2] countAces;
 
-    function getDeck() {
+    uint indexInDeck;
+    
+    function random() private view returns (uint) {
+        // sha3 and now have been deprecated
+        return uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, msg.sender)));
+        // convert hash to integer
+        // players is an array of entrants
+        
+    }
 
-        for(let i = 0; i < suits.length; i++)
-        {
-            for(let x = 0; x < values.length; x++)
-            {
-                let card = {"value": values[x], "suit": suits[i]};
-                deck.push(card);
-            }
+    function shuffle() {
+        for (uint i = 0; i < 1000; i++) {
+            Card location1 = random() % deck.length;
+            Card location2 = random() % deck.length;
+            Card tmp = deck[location1];
+
+            deck[location1] = deck[location2];
+            deck[location2] = tmp;
         }
     }
-    
-    function shuffle() {
-    // for 1000 turns
-    // switch the values of two random cards
-    for (let i = 0; i < 1000; i++)
-    {
-        let location1 = Math.floor((Math.random() * deck.length));
-        let location2 = Math.floor((Math.random() * deck.length));
-        let tmp = deck[location1];
-
-        deck[location1] = deck[location2];
-        deck[location2] = tmp;
-    }
-}
 
 }
