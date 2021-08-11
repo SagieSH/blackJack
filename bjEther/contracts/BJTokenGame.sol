@@ -6,7 +6,6 @@ contract BJTokenGame {
     address admin;
     BJToken public tokenContract;
     uint256 public tokenPrice;
-    uint256 public tokensSold;
 
     event Sell(address _buyer, uint256 _amount);
 
@@ -21,11 +20,10 @@ contract BJTokenGame {
     // }
 
     function buyTokens() public payable {
-        // require(msg.value > 0);
-        // require(tokenContract.getBalance(address(this)) >= msg.value);
-        // require(tokenContract.transfer(msg.sender, msg.value));
+        require(msg.value > 0);
+        
+        tokenContract.mint(msg.sender, msg.value);
 
-        tokensSold += msg.value;
 
         emit Sell(msg.sender, msg.value);
     }
@@ -37,5 +35,9 @@ contract BJTokenGame {
         // UPDATE: Let's not destroy the contract here
         // Just transfer the balance to the admin
         // admin.transfer(address(this).balance);
+    }
+
+    function balanceOf(address account) public returns (uint256 balance) {
+        return tokenContract.getBalance(account);
     }
 }

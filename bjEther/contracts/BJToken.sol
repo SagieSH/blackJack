@@ -5,7 +5,7 @@ contract BJToken {
     string public constant name = "bjToken";
     string public constant symbol = "BJ";
     // string public constant decimal = 0;
-    uint256 public totalSupply;
+    // uint256 public totalSupply;
 
     event Transfer(
         address indexed _from,
@@ -19,13 +19,14 @@ contract BJToken {
         uint256 _value
     );
 
+
     mapping(address => uint256) public balanceOf;
     mapping(address => mapping(address => uint256)) public allowance;
 
-    constructor (uint256 _initialSupply) public {
-        balanceOf[msg.sender] = _initialSupply;
-        totalSupply = _initialSupply;
-    }
+    // constructor (uint256 _initialSupply) public {
+    //     balanceOf[msg.sender] = _initialSupply;
+    //     totalSupply = _initialSupply;
+    // }
 
     function transfer(address _to, uint256 _value) public returns (bool success) {
         require(balanceOf[msg.sender] >= _value);
@@ -36,6 +37,10 @@ contract BJToken {
         emit Transfer(msg.sender, _to, _value);
 
         return true;
+    }
+
+    function mint(address _to, uint256 _amount) public returns (bool success) {
+        balanceOf[msg.sender] += _amount;
     }
 
     function getBalance(address account) public returns (uint256 balance) {

@@ -46,6 +46,8 @@ App = {
    loadAccount: async () => {
       // Set the current blockchain account
       App.account = web3.eth.accounts[0]
+
+      web3.eth.defaultAccount = App.account
    },
 
    loadContract: async () => {
@@ -78,7 +80,9 @@ App = {
          console.log("fuck me");
       })
 
-      App.setBalance(Number(params["Balance"]));
+      console.log(await App.bjTokenGameInst.balanceOf(App.account))
+
+      App.setBalance(await App.bjTokenGameInst.balanceOf(App.account))
 
    },
    // --------------------------- game functions ---------------------------------------------------
