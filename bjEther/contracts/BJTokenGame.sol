@@ -70,12 +70,12 @@ contract BJTokenGame {
         userToIndex["Dealer"] = 1;
     }
 
-    struct Card{
+    struct Card {
         string value;
         string suit;
     }
-    mapping(string => string)[52] deck;
 
+    Card[52] deck;
 
     bool playerTurn = false;        // indicates whether the player can hit or stand
     bool inGame = false;            // indicates whether the player is currently in game
@@ -90,12 +90,15 @@ contract BJTokenGame {
     
     function getDeck() {
 
+        uint index = 0;
+
         for(uint i = 0; i < suits.length; i++)
         {
             for(uint x = 0; x < values.length; x++)
             {
-                card = {"value": values[x], "suit": suits[i]};
-                deck.push(card);
+                card = Card(values[i], suits[x]);
+                deck[index] = card;
+                index++;
             }
         }
         indexInDeck = 0;
