@@ -9,6 +9,8 @@ contract BJTokenGame {
 
     event Sell(address _buyer, uint256 _amount);
     event BalanceOf(address _account, uint256 _amount);
+    event Alert(string _msg);
+    event ChangeHTMLText(string _id, string _newText);
 
     constructor (BJToken _tokenContract, uint256 _tokenPrice) public {
         admin = msg.sender;
@@ -127,9 +129,9 @@ contract BJTokenGame {
     function checkIfPlayerTurn() {
         if (!playerTurn) {
             if (!inGame) {
-                alert("Press \'New Game\' to start!");
+                emit Alert("Press \'New Game\' to start!");
             } else {
-                alert("It is not your turn!");
+                emit Alert("It is not your turn!");
             }
             return false;
         }
@@ -141,7 +143,7 @@ contract BJTokenGame {
             return;
         }
         if (hitJS("Player")) {
-            document.getElementById("msg").innerText = "Player bust. DEALER WINS!";
+            emit ChangeHTMLText("msg", "Player bust. DEALER WINS!");
             dealerWin();
             endGame();
         }
