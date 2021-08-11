@@ -149,4 +149,49 @@ contract BJTokenGame {
         }
     }
 
+
+    function runDealer() {
+        while (!isAbove("Dealer", DEALLIMIT, true)) {
+            hitJS("Dealer");
+        }
+
+        if (isAbove("Dealer", BUSTLIMIT, false)) {
+            document.getElementById("msg").innerText = "Dealer bust. PLAYER WINS!";
+            playerWin();
+            return;
+        }
+        playerAmount = amount[userToIndex["Player"]];
+        dealerAmount = amount[userToIndex["Dealer"]];
+
+        if (playerAmount == dealerAmount) {
+            document.getElementById("msg").innerText = "It's a tie!";
+            return;
+        }
+
+        if (playerAmount > dealerAmount) {
+            document.getElementById("msg").innerText = "PLAYER WINS!";
+            playerWin();
+            return;
+        }
+
+        document.getElementById("msg").innerText = "DEALER WINS!";
+        dealerWin();
+    }
+
+    function isAbove(user, limit, deal) {
+        // returns whether we have passed the limit
+        
+        while (amount[userToIndex[user]] >= limit) {
+            if (countAces[userToIndex[user]] == 0 || deal) {
+                return true;
+            }
+            //wait 1 second
+            countAces[userToIndex[user]]--;
+            addAmount(user, -10);
+
+        }
+
+
+        return false;
+    }   
 }
