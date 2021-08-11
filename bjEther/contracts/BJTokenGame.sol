@@ -86,6 +86,8 @@ contract BJTokenGame {
     uint[2] amount;
     uint[2] countAces;
 
+    uint indexInDeck;
+    
     function getDeck() {
 
         for(uint i = 0; i < suits.length; i++)
@@ -99,5 +101,24 @@ contract BJTokenGame {
         indexInDeck = 0;
     }
 
+    
+    function random() private view returns (uint) {
+        // sha3 and now have been deprecated
+        return uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, msg.sender)));
+        // convert hash to integer
+        // players is an array of entrants
+        
+    }
+
+    function shuffle() {
+        for (uint i = 0; i < 1000; i++) {
+            Card location1 = random() % deck.length;
+            Card location2 = random() % deck.length;
+            Card tmp = deck[location1];
+
+            deck[location1] = deck[location2];
+            deck[location2] = tmp;
+        }
+    }
 
 }
