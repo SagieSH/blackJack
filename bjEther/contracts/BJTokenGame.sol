@@ -9,8 +9,6 @@ contract BJTokenGame {
 
     event Sell(address _buyer, uint256 _amount);
     event BalanceOf(address _account, uint256 _amount);
-    event Alert(string _msg);
-    event ChangeHTMLText(string _id, string _newText);
 
     constructor (BJToken _tokenContract, uint256 _tokenPrice) public {
         admin = msg.sender;
@@ -45,6 +43,12 @@ contract BJTokenGame {
 
 
     //-------------------------------- Game Logic ----------------------------------------------
+
+
+    event Alert(string _msg);
+    event SetAmount(string _user, uint _newAmount);
+    event ChangeHTMLText(string _id, string _newText);
+    event PlaceCard(string _user, uint _index, string _suit, string _value);
 
     string[4] suits = ["\u2660", "\u2662", "\u2667", "\u2665"];
     string[13] values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
@@ -90,19 +94,23 @@ contract BJTokenGame {
 
     uint indexInDeck;
 
-    function popDeck() private returns Card {
+    function popDeck() private returns (Card) {
         indexInDeck++;
         return deck[indexInDeck - 1];
     }
     
-    function initDeck() private {
+    function placeCard(string user, Card card) private {
+        uint index = indexInTable[userToIndex[user]];
+        emit PlaceCard(user, index, card.suit, card.value)
+        addAmount(user, valuesToNumbers[card.value]);
+        indexInTable[userToIndex[user]]++;
+    }
 
+    function initDeck() private {
         uint index = 0;
 
-        for(uint i = 0; i < suits.length; i++)
-        {
-            for(uint j = 0; j < values.length; j++)
-            {
+        for(uint i = 0; i < suits.length; i++) {
+            for(uint j = 0; j < values.length; j++) {
                 card = Card(values[i], suits[j]);
                 deck[index] = card;
                 index++;
@@ -170,6 +178,16 @@ contract BJTokenGame {
 
     }
 
+    function standHTML() {
+        if (!checkIfPlayerTurn()) {
+            return;
+        }
+        playerTurn = false;
+        emit ChangeHTMLText("msg", "Now wait for the dealer to finish...");
+        runDealer();
+        endGame();
+    }
+
     function runDealer() private {
         while (!isAbove("Dealer", DEALLIMIT, true)) {
             hitJS("Dealer");
@@ -180,8 +198,8 @@ contract BJTokenGame {
             playerWin();
             return;
         }
-        playerAmount = amount[userToIndex["Player"]];
-        dealerAmount = amount[userToIndex["Dealer"]];
+        uint playerAmount = amount[userToIndex["Player"]];
+        uint dealerAmount = amount[userToIndex["Dealer"]];
 
         if (playerAmount == dealerAmount) {
             emit ChangeHTMLText("msg", "It's a tie!");
