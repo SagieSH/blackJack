@@ -44,13 +44,13 @@ contract BJTokenGame {
 
     //-------------------------------- Game Logic ----------------------------------------------
 
-    string suits[4] = ["\u2660", "\u2662", "\u2667", "\u2665"];
-    string values[13] = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+    string[4] suits = ["\u2660", "\u2662", "\u2667", "\u2665"];
+    string[13] values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 
     mapping(string => uint) valuesToNumbers;
     mapping(string => uint) userToIndex;
 
-    function initializeMappings() {
+    function initializeMappings() public {
 
         valuesToNumbers["A"] = 11;
         valuesToNumbers["2"] = 2;
@@ -70,7 +70,7 @@ contract BJTokenGame {
         userToIndex["Dealer"] = 1;
     }
 
-    mapping(string => string) deck[52];
+    mapping(string => string)[52] deck;
 
 
     // let deck = new Array();
