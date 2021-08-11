@@ -82,5 +82,16 @@ contract BJTokenGame {
     uint[2] amount;
     uint[2] countAces;
 
+    function getDeck() {
+
+        for(let i = 0; i < suits.length; i++)
+        {
+            for(let x = 0; x < values.length; x++)
+            {
+                let card = {"value": values[x], "suit": suits[i]};
+                deck.push(card);
+            }
+        }
+    }
 
 }
