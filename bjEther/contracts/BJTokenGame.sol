@@ -90,12 +90,12 @@ contract BJTokenGame {
 
     uint indexInDeck;
 
-    function popDeck() public returns Card {
+    function popDeck() private returns Card {
         indexInDeck++;
         return deck[indexInDeck - 1];
     }
     
-    function getDeck() {
+    function initDeck() private {
 
         uint index = 0;
 
@@ -120,7 +120,7 @@ contract BJTokenGame {
         
     }
 
-    function shuffle() public {
+    function shuffle() private {
         for (uint i = 0; i < 1000; i++) {
             Card location1 = random() % deck.length;
             Card location2 = random() % deck.length;
@@ -154,7 +154,7 @@ contract BJTokenGame {
         }
     }
 
-    function hitJS(user) returns (bool) {
+    function hitJS(user) private returns (bool) {
         //opens the top card of the deck
         if (indexInDeck >= deck.length) {
             emit Alert("empty deck");
@@ -170,7 +170,7 @@ contract BJTokenGame {
 
     }
 
-    function runDealer() public {
+    function runDealer() private {
         while (!isAbove("Dealer", DEALLIMIT, true)) {
             hitJS("Dealer");
         }
@@ -198,7 +198,7 @@ contract BJTokenGame {
         dealerWin();
     }
 
-    function isAbove(string user, uint limit, bool deal) public returns(bool) {
+    function isAbove(string user, uint limit, bool deal) private returns(bool) {
         // returns whether we have passed the limit
         
         while (amount[userToIndex[user]] >= limit) {
