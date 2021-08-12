@@ -15,7 +15,7 @@ contract BJTokenGame {
         tokenContract = _tokenContract;
         tokenPrice = _tokenPrice;
         initMaps();
-        // initDeck();
+        initDeck();
     }
 
     function multiply(uint x, uint y) internal pure returns (uint z) {
@@ -51,6 +51,7 @@ contract BJTokenGame {
 
     function random() private view returns (uint) {
         // sha3 and now have been deprecated
+        // return 1;
         return uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, msg.sender)));
         // convert hash to integer
         // players is an array of entrants
@@ -136,6 +137,7 @@ contract BJTokenGame {
     }
 
     function popDeck() private returns (Card memory) {
+        shuffleFirst();
         indexInDeck++;
         return deck[indexInDeck - 1];
     }
@@ -148,15 +150,14 @@ contract BJTokenGame {
     }
 
 
-    function shuffle() private {
-        for (uint i = 0; i < 1000; i++) {
-            uint location1 = random() % deck.length;
-            uint location2 = random() % deck.length;
-            Card memory tmp = deck[location1];
+    function shuffleFirst() private {
+        uint location1 = indexInDeck;
+        uint location2 = (random() % (deck.length- indexInDeck)) + indexInDeck;
+        Card memory tmp = deck[location1];
 
-            deck[location1] = deck[location2];
-            deck[location2] = tmp;
-        }
+        deck[location1] = deck[location2];
+        deck[location2] = tmp;
+
     }
 
     function checkIfPlayerTurn() public returns(bool) {
@@ -285,6 +286,7 @@ contract BJTokenGame {
         indexInTable = [1, 1];
         amount = [0, 0];
         countAces = [0, 0];
+        indexInDeck = 0;
         setAmount("Player", 0);
         setAmount("Dealer", 0);
         hitJS("Dealer");
@@ -298,7 +300,6 @@ contract BJTokenGame {
             emit Alert("Not enough balance!");
             return;
         }
-        shuffle();
         cleanTable();
         gameSetup();
         inGame = true;

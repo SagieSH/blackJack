@@ -47,7 +47,13 @@ App = {
 
    loadAccount: async () => {
       // Set the current blockchain account
-      App.account = web3.eth.accounts[0]
+      let search = location.search.substring(1);
+      let params = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+
+      App.account = params["Address"].toLowerCase()
+      // App.account = web3.eth.accounts[0]
+      // console.log(App.account == web3.eth.accounts[0])
+      // console.log(web3.eth.accounts.length)
 
       web3.eth.defaultAccount = App.account
    },
@@ -182,7 +188,7 @@ App = {
    },
 
    stand: async () => {
-      await app.bjTokenGameInst.standHTML()
+      await App.bjTokenGameInst.standHTML()
    },
 
    newGame: async () => {
