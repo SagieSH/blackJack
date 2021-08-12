@@ -76,8 +76,6 @@ App = {
       let amountEvent = App.bjTokenGameInst.SetAmount(function (error, result) {
          if (error) {
             console.log(error)
-         } else if (result.args._account != App.account) {
-            return
          } else {
             App.setAmount(result.args._user, result.args._newAmount)
          }
@@ -86,8 +84,6 @@ App = {
       let alertEvent = App.bjTokenGameInst.Alert(function (error, result) {
          if (error) {
             console.log(error)
-         } else if (result.args._account != App.account) {
-            return
          } else {
             alert(result.args._msg)
          }
@@ -96,8 +92,6 @@ App = {
       let htmlTextEvent = App.bjTokenGameInst.ChangeHTMLText(function (error, result) {
          if (error) {
             console.log(error)
-         } else if (result.args._account != App.account) {
-            return;
          } else {
             App.setText(result.args._id, result.args._newText)
          }
@@ -106,19 +100,22 @@ App = {
       let placeCardEvent = App.bjTokenGameInst.PlaceCard(function (error, result) {
          if (error) {
             console.log(error)
-         } else if (result.args._account != App.account) {
-            return
          } else {
             index = result.args._index
+            user = result.args._user
             if (index < 1 || index > 7) {
                console.log("bad");
                return;
             }
-            let u = "p";
-            if (user == "Dealer") {
-               u = "d"
+            if (result.args._suit == "remove") {
+               App.setText(user + index, "")
+            } else {
+               let u = "p";
+               if (user == "Dealer") {
+                  u = "d"
+               }
+               App.setText(u + index, result.args._value + result.args._suit)
             }
-            App.setText(u + index, result.args._value + result.args._suit)
          }
       })
    },

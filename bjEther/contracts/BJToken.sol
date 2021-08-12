@@ -24,12 +24,12 @@ contract BJToken {
     mapping(address => mapping(address => uint256)) public allowance;
     
 
-    function addAmount(address _to, uint256 _amount) public returns (bool success) {
+    function addTokens(address _to, uint256 _amount) public returns (bool success) {
         balanceOf[_to] += _amount;
         return true;
     }
 
-    function deductAmount(address _to, uint256 _amount) public returns (bool success) {
+    function deductTokens(address _to, uint256 _amount) public returns (bool success) {
         require(balanceOf[_to] >= _amount);
         balanceOf[_to] -= _amount;
         return true;

@@ -14,7 +14,8 @@ contract BJTokenGame {
         admin = msg.sender;
         tokenContract = _tokenContract;
         tokenPrice = _tokenPrice;
-        initializeMappings();
+        initMaps();
+        initDeck();
     }
 
     function multiply(uint x, uint y) internal pure returns (uint z) {
@@ -25,7 +26,7 @@ contract BJTokenGame {
         require(msg.value > 0);
         require(msg.value == multiply(_numberOfTokens, tokenPrice));
         
-        tokenContract.addAmount(msg.sender, _numberOfTokens);
+        tokenContract.addTokens(msg.sender, _numberOfTokens);
 
         emit BalanceOf(msg.sender, tokenContract.balanceOf(msg.sender));
     }
@@ -36,7 +37,7 @@ contract BJTokenGame {
 
         msg.sender.transfer(_numberOfTokens * tokenPrice);
 
-        tokenContract.deductAmount(msg.sender, _numberOfTokens);
+        tokenContract.deductTokens(msg.sender, _numberOfTokens);
 
         emit BalanceOf(msg.sender, tokenContract.balanceOf(msg.sender));
     }
@@ -44,6 +45,13 @@ contract BJTokenGame {
 
     //-------------------------------- Game Logic ----------------------------------------------
 
+    function random() private view returns (uint) {
+        // sha3 and now have been deprecated
+        return uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, msg.sender)));
+        // convert hash to integer
+        // players is an array of entrants
+        
+    }
 
     event Alert(string _msg);
     event SetAmount(string _user, uint _newAmount);
@@ -56,7 +64,7 @@ contract BJTokenGame {
     mapping(string => uint) valuesToNumbers;
     mapping(string => uint) userToIndex;
 
-    function initializeMappings() public {
+    function initMaps() private {
 
         valuesToNumbers["A"] = 11;
         valuesToNumbers["2"] = 2;
@@ -94,18 +102,6 @@ contract BJTokenGame {
 
     uint indexInDeck;
 
-    function popDeck() private returns (Card) {
-        indexInDeck++;
-        return deck[indexInDeck - 1];
-    }
-    
-    function placeCard(string user, Card card) private {
-        uint index = indexInTable[userToIndex[user]];
-        emit PlaceCard(user, index, card.suit, card.value)
-        addAmount(user, valuesToNumbers[card.value]);
-        indexInTable[userToIndex[user]]++;
-    }
-
     function initDeck() private {
         uint index = 0;
 
@@ -119,14 +115,28 @@ contract BJTokenGame {
         indexInDeck = 0;
     }
 
-    
-    function random() private view returns (uint) {
-        // sha3 and now have been deprecated
-        return uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, msg.sender)));
-        // convert hash to integer
-        // players is an array of entrants
-        
+    function setAmount(user, newAmount) private {
+        amount[userToIndex[user]] = newAmount;
+        emit SetAmount(user, newAmount);
     }
+
+    function addAmount(user, adding) private {
+        uint ret = amount[userToIndex[user]] + adding;
+        setAmount(user, ret);
+    }
+
+    function popDeck() private returns (Card) {
+        indexInDeck++;
+        return deck[indexInDeck - 1];
+    }
+    
+    function placeCard(string user, Card card) private {
+        uint index = indexInTable[userToIndex[user]];
+        emit PlaceCard(user, index, card.suit, card.value)
+        addAmount(user, valuesToNumbers[card.value]);
+        indexInTable[userToIndex[user]]++;
+    }
+
 
     function shuffle() private {
         for (uint i = 0; i < 1000; i++) {
@@ -178,7 +188,7 @@ contract BJTokenGame {
 
     }
 
-    function standHTML() {
+    function standHTML() public {
         if (!checkIfPlayerTurn()) {
             return;
         }
@@ -198,6 +208,7 @@ contract BJTokenGame {
             playerWin();
             return;
         }
+
         uint playerAmount = amount[userToIndex["Player"]];
         uint dealerAmount = amount[userToIndex["Dealer"]];
 
@@ -231,4 +242,56 @@ contract BJTokenGame {
         
         return false;
     }   
+
+    function playerWin() private {
+        tokenContract.addTokens(msg.sender, 1);
+        emit BalanceOf(msg.sender, tokenContract.balanceOf(msg.sender));
+    }
+
+
+    function dealerWin() private {
+        tokenContract.deductTokens(msg.sender, 1);
+        emit BalanceOf(msg.sender, tokenContract.balanceOf(msg.sender));
+    }
+
+    function cleanTable() private {
+        // clean: all the cards
+        for (let i = 1; i < indexInTable[userToIndex["Player"]]; i++) {
+            emit PlaceCard("p", i, "remove", "");
+        }
+        for (let i = 1; i < indexInTable[userToIndex["Dealer"]]; i++){
+            emit PlaceCard("d", i, "remove", "");
+        }
+
+        emit ChangeHTMLText("msg", "Press \'New Game\' to start again!");
+    }
+
+    function endGame() private {
+        playerTurn = false;
+        inGame = false;
+    }
+
+    function gameSetup() private {
+        indexInTable = [1, 1];
+        amount = [0, 0];
+        countAces = [0, 0];
+        setAmount("Player", 0);
+        setAmount("Dealer", 0);
+        hitJS("Dealer");
+        hitJS("Player");
+        hitJS("Player");
+        emit ChangeHTMLText("msg", "You may HIT or STAND");
+    }
+
+    function singleGame() public {
+        if (balanceOf(msg.sender) <= 0) {
+            emit Alert("Not enough balance!");
+            return;
+        }
+        shuffle();
+        cleanTable();
+        gameSetup();
+        inGame = true;
+        playerTurn = true;
+    }
 }
