@@ -137,12 +137,18 @@ App = {
       App.setText("PlayerMsg", "Player (" + params["Player"] + ") Hand:")
 
       App.setBalance(0)
+      let desiredBalance = Number(params["Balance"]);
 
-      console.log("desired balance: " + Number(params["Balance"]))
-      App.bjTokenGameInst.buyTokens(Number(params["Balance"]), 
-         {value: App.tokenPrice * Number(params["Balance"])}).catch(function () { 
-         console.log("token error");
-      })
+      console.log("desired balance: " + desiredBalance)
+
+      if (desiredBalance == 0) {
+         App.bjTokenGameInst.refreshBalance();
+      } else {
+         App.bjTokenGameInst.buyTokens(Number(params["Balance"]), 
+            {value: App.tokenPrice * Number(params["Balance"])}).catch(function () { 
+            console.log("token error");
+         })
+      }
    },
 
    withdraw: async () => {
@@ -162,22 +168,22 @@ App = {
    setBalance: async (newBalance) => {
       App.balance = newBalance;
       App.setText("balance", "Balance: " + newBalance)
-   }
+   },
 
    setAmount: async (user, newAmount) => {
       let id = "total" + user;
       App.setText(id, user + " total: " + newAmount);
-   }
+   },
 
    // --------------------------- game functions ---------------------------------------------------
 
    hit: async () => {
       await App.bjTokenGameInst.hitHTML()
-   }
+   },
 
    stand: async () => {
       await app.bjTokenGameInst.standHTML()
-   }
+   },
 
    newGame: async () => {
       await App.bjTokenGameInst.singleGame()

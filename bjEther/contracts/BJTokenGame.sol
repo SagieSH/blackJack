@@ -15,7 +15,7 @@ contract BJTokenGame {
         tokenContract = _tokenContract;
         tokenPrice = _tokenPrice;
         initMaps();
-        initDeck();
+        // initDeck();
     }
 
     function multiply(uint x, uint y) internal pure returns (uint z) {
@@ -39,6 +39,10 @@ contract BJTokenGame {
 
         tokenContract.deductTokens(msg.sender, _numberOfTokens);
 
+        emit BalanceOf(msg.sender, tokenContract.balanceOf(msg.sender));
+    }
+
+    function refreshBalance() public {
         emit BalanceOf(msg.sender, tokenContract.balanceOf(msg.sender));
     }
 
@@ -105,8 +109,8 @@ contract BJTokenGame {
     function initDeck() private {
         uint index = 0;
 
-        for(uint i = 0; i < suits.length; i++) {
-            for(uint j = 0; j < values.length; j++) {
+        for(uint i = 0; i < values.length; i++) {
+            for(uint j = 0; j < suits.length; j++) {
                 Card memory card = Card(values[i], suits[j]);
                 deck[index] = card;
                 index++;
