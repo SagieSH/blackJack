@@ -171,7 +171,17 @@ App = {
 
    // --------------------------- game functions ---------------------------------------------------
 
-   
+   hit: async () => {
+      await App.bjTokenGameInst.hitHTML()
+   }
+
+   stand: async () => {
+      await app.bjTokenGameInst.standHTML()
+   }
+
+   newGame: async () => {
+      await App.bjTokenGameInst.singleGame()
+   }
    
 
 
