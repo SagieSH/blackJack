@@ -107,7 +107,7 @@ contract BJTokenGame {
 
         for(uint i = 0; i < suits.length; i++) {
             for(uint j = 0; j < values.length; j++) {
-                card = Card(values[i], suits[j]);
+                Card memory card = Card(values[i], suits[j]);
                 deck[index] = card;
                 index++;
             }
@@ -115,34 +115,40 @@ contract BJTokenGame {
         indexInDeck = 0;
     }
 
-    function setAmount(user, newAmount) private {
+    function setAmount(string memory user, uint newAmount) private {
         amount[userToIndex[user]] = newAmount;
         emit SetAmount(user, newAmount);
     }
 
-    function addAmount(user, adding) private {
-        uint ret = amount[userToIndex[user]] + adding;
+    function addAmount(string memory user, uint adding, bool minus) private {
+        uint ret = 0;
+        if (!minus) {
+            ret = amount[userToIndex[user]] + adding;
+        } else {
+            ret = amount[userToIndex[user]] - adding;
+        }
+        
         setAmount(user, ret);
     }
 
-    function popDeck() private returns (Card) {
+    function popDeck() private returns (Card memory) {
         indexInDeck++;
         return deck[indexInDeck - 1];
     }
     
-    function placeCard(string user, Card card) private {
+    function placeCard(string memory user, Card memory card) private {
         uint index = indexInTable[userToIndex[user]];
-        emit PlaceCard(user, index, card.suit, card.value)
-        addAmount(user, valuesToNumbers[card.value]);
+        emit PlaceCard(user, index, card.suit, card.value);
+        addAmount(user, valuesToNumbers[card.value], false);
         indexInTable[userToIndex[user]]++;
     }
 
 
     function shuffle() private {
         for (uint i = 0; i < 1000; i++) {
-            Card location1 = random() % deck.length;
-            Card location2 = random() % deck.length;
-            Card tmp = deck[location1];
+            uint location1 = random() % deck.length;
+            uint location2 = random() % deck.length;
+            Card memory tmp = deck[location1];
 
             deck[location1] = deck[location2];
             deck[location2] = tmp;
@@ -172,15 +178,15 @@ contract BJTokenGame {
         }
     }
 
-    function hitJS(user) private returns (bool) {
+    function hitJS(string memory user) private returns (bool) {
         //opens the top card of the deck
         if (indexInDeck >= deck.length) {
             emit Alert("empty deck");
             return false;
         }
-        Card card = popDeck();
+        Card memory card = popDeck();
         placeCard(user, card);
-        if (card["value"] == "A") {
+        if (valuesToNumbers[card.value] == 11) {
             countAces[userToIndex[user]]++;
         }
 
@@ -227,7 +233,7 @@ contract BJTokenGame {
         dealerWin();
     }
 
-    function isAbove(string user, uint limit, bool deal) private returns(bool) {
+    function isAbove(string memory user, uint limit, bool deal) private returns(bool) {
         // returns whether we have passed the limit
         
         while (amount[userToIndex[user]] >= limit) {
@@ -236,7 +242,7 @@ contract BJTokenGame {
             }
             //wait 1 second
             countAces[userToIndex[user]]--;
-            addAmount(user, -10);
+            addAmount(user, 10, true);
 
         }
         
@@ -256,10 +262,10 @@ contract BJTokenGame {
 
     function cleanTable() private {
         // clean: all the cards
-        for (let i = 1; i < indexInTable[userToIndex["Player"]]; i++) {
+        for (uint i = 1; i < indexInTable[userToIndex["Player"]]; i++) {
             emit PlaceCard("p", i, "remove", "");
         }
-        for (let i = 1; i < indexInTable[userToIndex["Dealer"]]; i++){
+        for (uint i = 1; i < indexInTable[userToIndex["Dealer"]]; i++){
             emit PlaceCard("d", i, "remove", "");
         }
 
@@ -284,7 +290,7 @@ contract BJTokenGame {
     }
 
     function singleGame() public {
-        if (balanceOf(msg.sender) <= 0) {
+        if (tokenContract.balanceOf(msg.sender) <= 0) {
             emit Alert("Not enough balance!");
             return;
         }
