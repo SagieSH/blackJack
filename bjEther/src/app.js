@@ -47,13 +47,11 @@ App = {
 
    loadAccount: async () => {
       // Set the current blockchain account
-      let search = location.search.substring(1);
-      let params = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+      // let search = location.search.substring(1);
+      // let params = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
 
-      App.account = params["Address"].toLowerCase()
-      // App.account = web3.eth.accounts[0]
-      // console.log(App.account == web3.eth.accounts[0])
-      // console.log(web3.eth.accounts.length)
+      App.account = web3.eth.accounts[0]
+      console.log(web3.eth.accounts.length)
 
       web3.eth.defaultAccount = App.account
    },
@@ -137,7 +135,7 @@ App = {
          window.location.replace("index.html");
          alert("Deposit amount must be a non-negative integer!");
       }
-      App.setText("msg", "Press \'New Game\' to start!")
+      App.cleanTable()
 
       App.setText("DealerMsg", "Dealer Hand:")
       App.setText("PlayerMsg", "Player (" + params["Player"] + ") Hand:")
@@ -182,6 +180,19 @@ App = {
    },
 
    // --------------------------- game functions ---------------------------------------------------
+
+
+   cleanTable: async () => {
+      // clean: all the cards
+      for (let i = 1; i < 7; i++){
+         document.getElementById("p" + i).innerText = "";
+      }
+      for (let i = 1; i < 7; i++){
+         document.getElementById("d" + i).innerText = "";
+      }
+
+      document.getElementById("msg").innerText = "Press \'New Game\' to start again!";
+   }
 
    hit: async () => {
       await App.bjTokenGameInst.hitHTML()
