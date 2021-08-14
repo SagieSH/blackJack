@@ -3,9 +3,12 @@ pragma solidity ^0.5.0;
 import "./BJToken.sol";
 
 contract BJTokenGame {
-    address admin;
+    address payable admin;
+
     BJToken public tokenContract;
     uint256 public tokenPrice;
+    uint256 tokensInContract;
+
 
     event Sell(address _buyer, uint256 _amount);
     event BalanceOf(address _account, uint256 _amount);
@@ -14,6 +17,7 @@ contract BJTokenGame {
         admin = msg.sender;
         tokenContract = _tokenContract;
         tokenPrice = _tokenPrice;
+        tokensInContract = 0;
         initMaps();
         initDeck();
     }
@@ -27,8 +31,9 @@ contract BJTokenGame {
         require(msg.value == multiply(_numberOfTokens, tokenPrice));
         
         tokenContract.addTokens(msg.sender, _numberOfTokens);
+        tokensInContract += _numberOfTokens;
 
-        emit BalanceOf(msg.sender, tokenContract.balanceOf(msg.sender));
+        refreshBalance();
     }
 
     function withdraw(uint256 _numberOfTokens) public {
@@ -38,8 +43,19 @@ contract BJTokenGame {
         msg.sender.transfer(_numberOfTokens * tokenPrice);
 
         tokenContract.deductTokens(msg.sender, _numberOfTokens);
+        tokensInContract -= _numberOfTokens;
 
-        emit BalanceOf(msg.sender, tokenContract.balanceOf(msg.sender));
+        refreshBalance();
+    }
+
+    function withdrawAll() public {
+        require(msg.sender == admin);
+        admin.transfer(tokensInContract * tokenPrice);
+
+        tokenContract.deductTokens(admin, tokenContract.balanceOf(admin));  
+        tokensInContract = 0;
+
+        refreshBalance();
     }
 
     function refreshBalance() public {
@@ -100,6 +116,8 @@ contract BJTokenGame {
     bool inGame = false;            // indicates whether the player is currently in game
     uint BUSTLIMIT = 22;
     uint DEALLIMIT = 17;
+
+    uint currentBet;
 
     uint[2] indexInTable;
     uint[2] amount;
@@ -178,7 +196,6 @@ contract BJTokenGame {
         }
         if (hitJS("Player")) {
             emit ChangeHTMLText("msg", "Player bust. DEALER WINS!");
-            dealerWin();
             endGame();
         }
     }
@@ -225,6 +242,7 @@ contract BJTokenGame {
 
         if (playerAmount == dealerAmount) {
             emit ChangeHTMLText("msg", "It's a tie!");
+            tie();
             return;
         }
 
@@ -235,7 +253,6 @@ contract BJTokenGame {
         }
 
         emit ChangeHTMLText("msg", "DEALER WINS!");
-        dealerWin();
     }
 
     function isAbove(string memory user, uint limit, bool deal) private returns(bool) {
@@ -255,14 +272,14 @@ contract BJTokenGame {
     }   
 
     function playerWin() private {
-        tokenContract.addTokens(msg.sender, 1);
-        emit BalanceOf(msg.sender, tokenContract.balanceOf(msg.sender));
+        tokenContract.addTokens(msg.sender, 2 * currentBet);
+        refreshBalance();
     }
 
 
-    function dealerWin() private {
-        tokenContract.deductTokens(msg.sender, 1);
-        emit BalanceOf(msg.sender, tokenContract.balanceOf(msg.sender));
+    function tie() private {
+        tokenContract.deductTokens(msg.sender, currentBet);
+        refreshBalance();
     }
 
     function cleanTable() private {
@@ -295,11 +312,14 @@ contract BJTokenGame {
         emit ChangeHTMLText("msg", "You may HIT or STAND");
     }
 
-    function singleGame() public {
-        if (tokenContract.balanceOf(msg.sender) <= 0) {
+    function singleGame(uint betAmount) public {
+        if (tokenContract.balanceOf(msg.sender) < betAmount) {
             emit Alert("Not enough balance!");
             return;
         }
+        currentBet = betAmount;
+        tokenContract.deductTokens(msg.sender, currentBet);
+        refreshBalance();
         cleanTable();
         gameSetup();
         inGame = true;

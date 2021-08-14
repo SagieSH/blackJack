@@ -1,35 +1,33 @@
 <html>
 <head>
     <!-- <script type="text/javascript" src="main.js"></script> -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
     <style>
-        .topleft {
-                position: absolute;
-                top: 8px;
-                left: 16px;
-                font-size: 14px;
+        .LeftSide {
+            position: absolute;
+            top: 20vh;
+            left: 20vh;
         }
-        .Box {
-                width: 40px;
-                height: 40px;
-                text-align: center;
-                font-size: 15pt;
-                font-weight: bold;
-                font-family: verdana;
+        .RightSide {
+            position: absolute;
+            top: 15vh;
+            left: 120vh;
         }
 
-        .Title{
-            font-family: times new roman;
+        .Title {
+            font-family: calibri;
             font-weight: italic;
         }
 
-        .Balance{
-            font-family: times new roman;
+        .Font15 {
+            /*font-family: times new roman;*/
             font-size: 15pt;
         }
 
-        .Hand{
-            font-family: times new roman;
-            font-size: 15pt;
+        .Jumb {
+            /*height: 300px;*/
+            width: 500px;
         }
 
         button+button {
@@ -38,67 +36,85 @@
     </style>
 </head>
 
-<body>
+<body> <!-- onload="App.cleanTable()"> -->
 
-    <div class="topleft" id="account">Text here</div>
+    <nav class="navbar navbar-dark bg-dark">
+        <span class="navbar-brand mb-0 h1">Ethereum Blackjack</span>
+        <center>
+            <span id = "account" class="navbar-brand mb-0 h1"></span>
+        </center>
+        <right>
+            <!-- <div id="balance" class="Font15"></div> -->
+            <span id = "balance" class="navbar-brand mb-0 h1"></span>
+        </right>
+    </nav>
 
-    <center>
-        <!-- <div id="loader" class="text-center">
-            <p class="text-center">Loading...</p>
-        </div> -->
-        <div id="content">
+    <div class="leftSide">
+        <center>
             <h1 class="Title"> Welcome to BlackJack! </h1>
             
+            <br><br>
             
-            <div id="balance" class="Balance"></div>
-            <br>
+            <div id="msg" class="Font15"></div>
+
+            <br><br><br>
+
+            <div class="input-group mb-3">
+                <input type="text" id="betAmount" class="form-control" placeholder="Bet amount" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-success" type="button" onclick="App.newGame();">New Game</button>
+                </div>
+            </div>
             
-            <h2 id="DealerMsg" class="Hand"></h2>
-            <table border = "10">
-                <tr>
-                    <td id = "d1" class = "Box"></td>
-                    <td id = "d2" class = "Box"></td>
-                    <td id = "d3" class = "Box"></td>
-                    <td id = "d4" class = "Box"></td>
-                    <td id = "d5" class = "Box"></td>
-                    <td id = "d6" class = "Box"></td>
-                    <td id = "d7" class = "Box"></td>
-                </tr>
-            </table>
-            <div id="totalDealer" class="Balance"></div>
-
-            <br>
-            <br>
             <br>
 
-            <div id="msg" class="Balance"></div>
+            <button class="btn btn-success" onclick="App.withdraw()">Withdraw</button>
+            <button class="btn btn-success" onclick="App.withdraw()">Withdraw All (admin)</button>
+            
+            <br><br>
 
-            <h2 id="PlayerMsg" class="Hand"> Player's hand: </h2>
-            <table border = "10">
-                <tr>
-                    <td id = "p1" class = "Box"></td>
-                    <td id = "p2" class = "Box"></td>
-                    <td id = "p3" class = "Box"></td>
-                    <td id = "p4" class = "Box"></td>
-                    <td id = "p5" class = "Box"></td>
-                    <td id = "p6" class = "Box"></td>
-                    <td id = "p7" class = "Box"></td>
-                </tr>
-            </table>
-            <div id = "totalPlayer" class = "Balance"></div>
+            <a href = "javascript:App.changeName()">Change name, account and Deposit more</a>
 
-            <br>
-            <button onclick="App.hit();">HIT</button>
-            <button onclick="App.stand();">STAND</button>
-            <br>    
-            <br>
-            <button onclick="App.newGame();">New Game</button>
-            <button onclick="App.withdraw()">Withdraw</button>
-            <br>
-            <br>
-            <a href = "index.html">Change name, account and Deposit more</a>
-        </div>
-    </center>
+        </center>
+    </div>
+    <div class="rightSide">
+        <center>
+
+            <div class="Jumb">
+                <div class="jumbotron">
+                    <h2 id="DealerMsg" class="Font15">Dealer's hand: </h2>
+                    <ul class="list-group list-group-horizontal">
+                        <li id = "d1" class="list-group-item flex-fill"></li>
+                        <li id = "d2" class="list-group-item flex-fill"></li>
+                        <li id = "d3" class="list-group-item flex-fill"></li>
+                        <li id = "d4" class="list-group-item flex-fill"></li>
+                        <li id = "d5" class="list-group-item flex-fill"></li>
+                        <li id = "d6" class="list-group-item flex-fill"></li>
+                        <li id = "d7" class="list-group-item flex-fill"></li>
+                    </ul>
+                    <div id="totalDealer" class="Font15"></div>
+                    <br><br>
+                    <h2 id="PlayerMsg" class="Font15"> Player's hand: </h2>
+                    <ul class="list-group list-group-horizontal">
+                        <li id = "p1" class="list-group-item flex-fill"></li>
+                        <li id = "p2" class="list-group-item flex-fill"></li>
+                        <li id = "p3" class="list-group-item flex-fill"></li>
+                        <li id = "p4" class="list-group-item flex-fill"></li>
+                        <li id = "p5" class="list-group-item flex-fill"></li>
+                        <li id = "p6" class="list-group-item flex-fill"></li>
+                        <li id = "p7" class="list-group-item flex-fill"></li>
+                    </ul>
+                    <div id = "totalPlayer" class = "Font15"></div>
+                    <br>
+                    <br>
+                    <button class="btn btn-danger" onclick="App.hit();">HIT</button>
+                    <button class="btn btn-primary" onclick="App.stand();">STAND</button>
+                </div>
+            </div>
+
+            
+        </center>
+    </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

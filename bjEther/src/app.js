@@ -51,7 +51,6 @@ App = {
       // let params = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
 
       App.account = web3.eth.accounts[0]
-      console.log(web3.eth.accounts.length)
 
       web3.eth.defaultAccount = App.account
    },
@@ -127,7 +126,7 @@ App = {
    render: async () => {
 
       // Render Account
-      $('#account').html(App.account)
+      $('#account').html("Account ID: " + App.account)
 
       let search = location.search.substring(1);
       let params = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
@@ -143,8 +142,6 @@ App = {
       App.setBalance(0)
       let desiredBalance = Number(params["Balance"]);
 
-      console.log("desired balance: " + desiredBalance)
-
       if (desiredBalance == 0) {
          App.bjTokenGameInst.refreshBalance();
       } else {
@@ -159,11 +156,11 @@ App = {
       await App.bjTokenGameInst.withdraw(App.balance);
    },
 
-   // --------------------------- html functions ---------------------------------------------------
-
-   getText: async (id) => {
-      return $("#" + id).text();
+   withdrawAll: async () => {
+      await App.bjTokenGameInst.withdrawAll();
    },
+
+   // --------------------------- html functions ---------------------------------------------------
 
    setText: async (id, newValue) => {
       $("#" + id).text(newValue)
@@ -192,7 +189,7 @@ App = {
       }
 
       document.getElementById("msg").innerText = "Press \'New Game\' to start again!";
-   }
+   },
 
    hit: async () => {
       await App.bjTokenGameInst.hitHTML()
@@ -203,7 +200,19 @@ App = {
    },
 
    newGame: async () => {
-      await App.bjTokenGameInst.singleGame()
+      let betStr = $("#betAmount").val()
+      let betAmount = Number(betStr)
+      if (isNaN(betAmount) || betAmount <= 0) {
+         console.log(betStr)
+         alert("Invalid bet amount!")
+      } else{
+         await App.bjTokenGameInst.singleGame(betAmount)         
+      }
+   },
+
+   changeName: async () => {
+      App.cleanTable()
+      window.location.replace("index.html");
    }
    
 

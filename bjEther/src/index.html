@@ -1,21 +1,40 @@
 <html>
 <head>
-<!--     <script>
-        document.getElementsByClassName('start')[0].style.visibility = 'hidden';
-    </script> -->
+    <style>
+        .LeftSide {
+            position: absolute;
+            top: 20vh;
+            left: 20vh;
+        }
+        .RightSide {
+            position: absolute;
+            top: 15vh;
+            left: 100vh;
+        }
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
-    <div class = "start">
-        <p> Please insert the dealer's name and the player's name: </p>
+    <nav class="navbar navbar-dark bg-dark">
+        <span class="navbar-brand mb-0 h1">Ethereum Blackjack</span>
+    </nav>
+    <div class = "LeftSide">
+        <p> Please insert the player's name, <br> and the amount you wish to deposit: </p>
+        <br>
         <form action="game.html" method="GET">
-            <label for="Player">Player name:</label>
-            <input type="text" name="Player" /><br><br>
-            <!-- <label for="Address">Address:</label>
-            <input type="text" name="Address" /><br><br> -->
-            <label for="Balance">Balance:</label>
-            <input type="text" name="Balance" /><br><br>
-            <input type="submit" value="Submit" />
+            <div class="form-group">
+                <label for="Player">Player name:</label>
+                <input type="text" class="form-control" name="Player" />
+            </div>
+            <div class="form-group">
+                <label for="Balance">Balance:</label>
+                <input type="text" class="form-control" name="Balance" /><br><br>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
         </form>
+    </div>
+    <div class = "RightSide">
+        <img src="https://roarblogs.s3.amazonaws.com/borgata/casino/en/blog/wp-content/uploads/2020/04/28094255/BlackjackTable.jpg" height="400vh" width="650vh">
     </div>
 </body>
 </html>
