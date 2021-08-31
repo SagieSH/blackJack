@@ -23,6 +23,7 @@ contract BJTokenGame {
     }
 
     function multiply(uint x, uint y) internal pure returns (uint z) {
+        // returns x * y.
         require(y == 0 || (z = x * y) / y == x);
     }
 
@@ -48,6 +49,7 @@ contract BJTokenGame {
         refreshBalance();
     }
 
+    // Baayati retsah!
     function withdrawAll() public {
         require(msg.sender == admin);
         admin.transfer(tokensInContract * tokenPrice);
@@ -59,6 +61,7 @@ contract BJTokenGame {
     }
 
     function refreshBalance() public {
+        // updates the balance.
         emit BalanceOf(msg.sender, tokenContract.balanceOf(msg.sender));
     }
 
@@ -126,6 +129,7 @@ contract BJTokenGame {
     uint indexInDeck;
 
     function initDeck() private {
+        // create an orderly deck and returns it
         uint index = 0;
 
         for(uint i = 0; i < values.length; i++) {
@@ -139,11 +143,13 @@ contract BJTokenGame {
     }
 
     function setAmount(string memory user, uint newAmount) private {
+        // set the amount of the user.
         amount[userToIndex[user]] = newAmount;
         emit SetAmount(user, newAmount);
     }
 
     function addAmount(string memory user, uint adding, bool minus) private {
+        // add or sub from the amount the adding number (0 for add and 1 for sub).
         uint ret = 0;
         if (!minus) {
             ret = amount[userToIndex[user]] + adding;
@@ -155,12 +161,14 @@ contract BJTokenGame {
     }
 
     function popDeck() private returns (Card memory) {
+        // shuffle th first card and returns it.
         shuffleFirst();
         indexInDeck++;
         return deck[indexInDeck - 1];
     }
     
     function placeCard(string memory user, Card memory card) private {
+        // shows the new card, and updates the amont.
         uint index = indexInTable[userToIndex[user]];
         emit PlaceCard(user, index, card.suit, card.value);
         addAmount(user, valuesToNumbers[card.value], false);
@@ -169,6 +177,7 @@ contract BJTokenGame {
 
 
     function shuffleFirst() private {
+        // Replace the first card of the remain deck with another random card from it.
         uint location1 = indexInDeck;
         uint location2 = (random() % (deck.length- indexInDeck)) + indexInDeck;
         Card memory tmp = deck[location1];
@@ -179,6 +188,7 @@ contract BJTokenGame {
     }
 
     function checkIfPlayerTurn() public returns(bool) {
+        // checks if it is player's tern in the game, and react as needed.
         if (!playerTurn) {
             if (!inGame) {
                 emit Alert("Press \'New Game\' to start!");
@@ -191,6 +201,7 @@ contract BJTokenGame {
     }
 
     function hitHTML() public {
+        // doing the "hit" turn of the player.
         if (!checkIfPlayerTurn()) {
             return;
         }
@@ -201,7 +212,7 @@ contract BJTokenGame {
     }
 
     function hitJS(string memory user) private returns (bool) {
-        //opens the top card of the deck
+        // opens the top card of the deck and updates the amount.
         if (indexInDeck >= deck.length) {
             emit Alert("empty deck");
             return false;
@@ -217,6 +228,8 @@ contract BJTokenGame {
     }
 
     function standHTML() public {
+        // doing the "stand" turn of the player.
+
         if (!checkIfPlayerTurn()) {
             return;
         }
@@ -227,6 +240,7 @@ contract BJTokenGame {
     }
 
     function runDealer() private {
+        // doing the dealer's turn according to the game rules.
         while (!isAbove("Dealer", DEALLIMIT, true)) {
             hitJS("Dealer");
         }
@@ -262,7 +276,6 @@ contract BJTokenGame {
             if ((countAces[userToIndex[user]] == 0) || deal) {
                 return true;
             }
-            //wait 1 second
             countAces[userToIndex[user]]--;
             addAmount(user, 10, true);
 
@@ -272,18 +285,20 @@ contract BJTokenGame {
     }   
 
     function playerWin() private {
+        // add the tokens to the player
         tokenContract.addTokens(msg.sender, 2 * currentBet);
         refreshBalance();
     }
 
 
     function tie() private {
+        // deducts the tokens from the player
         tokenContract.deductTokens(msg.sender, currentBet);
         refreshBalance();
     }
 
     function cleanTable() private {
-        // clean: all the cards
+        // clean all the cards
         for (uint i = 1; i < indexInTable[userToIndex["Player"]]; i++) {
             emit PlaceCard("p", i, "remove", "");
         }
@@ -295,11 +310,13 @@ contract BJTokenGame {
     }
 
     function endGame() private {
+        // ends the game
         playerTurn = false;
         inGame = false;
     }
 
     function gameSetup() private {
+        // init all the setup
         indexInTable = [1, 1];
         amount = [0, 0];
         countAces = [0, 0];
@@ -313,6 +330,7 @@ contract BJTokenGame {
     }
 
     function singleGame(uint betAmount) public {
+        // starts a new game
         if (tokenContract.balanceOf(msg.sender) < betAmount) {
             emit Alert("Not enough balance!");
             return;

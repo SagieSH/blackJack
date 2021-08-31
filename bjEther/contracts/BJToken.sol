@@ -11,11 +11,13 @@ contract BJToken {
     
 
     function addTokens(address _to, uint256 _amount) public returns (bool success) {
+        // add the tokens to the address
         balanceOf[_to] += _amount;
         return true;
     }
 
     function deductTokens(address _to, uint256 _amount) public returns (bool success) {
+        // deduct tokens from the address
         require(balanceOf[_to] >= _amount);
         balanceOf[_to] -= _amount;
         return true;
