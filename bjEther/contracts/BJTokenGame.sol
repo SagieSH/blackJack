@@ -28,34 +28,39 @@ contract BJTokenGame {
     }
 
     function buyTokens(uint256 _numberOfTokens) public payable {
+        // buy tokens using ETHER
         require(msg.value > 0);
         require(msg.value == multiply(_numberOfTokens, tokenPrice));
         
-        tokenContract.addTokens(msg.sender, _numberOfTokens);
         tokensInContract += _numberOfTokens;
+        tokenContract.addTokens(msg.sender, _numberOfTokens);
 
         refreshBalance();
     }
 
     function withdraw(uint256 _numberOfTokens) public {
+        // withdraw ETHER using tokens
         require(_numberOfTokens > 0);
+        require(tokensInContract >= _numberOfTokens);
         require(tokenContract.balanceOf(msg.sender) >= _numberOfTokens);
-
-        msg.sender.transfer(_numberOfTokens * tokenPrice);
 
         tokenContract.deductTokens(msg.sender, _numberOfTokens);
         tokensInContract -= _numberOfTokens;
 
+        msg.sender.transfer(_numberOfTokens * tokenPrice);
+
         refreshBalance();
     }
 
-    // Baayati retsah!
     function withdrawAll() public {
+        // withdraw all the ETHER the contract currently holds
         require(msg.sender == admin);
-        admin.transfer(tokensInContract * tokenPrice);
 
-        tokenContract.deductTokens(admin, tokenContract.balanceOf(admin));  
+        tokenContract.deductTokens(admin, tokenContract.balanceOf(admin)); 
+        oldTokensInContract = tokensContract; 
         tokensInContract = 0;
+
+        admin.transfer(oldTokensInContract * tokenPrice);
 
         refreshBalance();
     }
