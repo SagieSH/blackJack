@@ -20,6 +20,7 @@ If you want to get all the ETHER from the contract , login as adming and press "
 
 User (Not the admin):
 
+Log in to metamask.
 Execute "npm run dev" 
 Fill your name and the amount of tokens you wish to deposit into the game.
 You entered the game. 
