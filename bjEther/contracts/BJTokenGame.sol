@@ -57,7 +57,7 @@ contract BJTokenGame {
         require(msg.sender == admin);
 
         tokenContract.deductTokens(admin, tokenContract.balanceOf(admin)); 
-        oldTokensInContract = tokensContract; 
+        uint256 oldTokensInContract = tokensInContract; 
         tokensInContract = 0;
 
         admin.transfer(oldTokensInContract * tokenPrice);
