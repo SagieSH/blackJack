@@ -8,7 +8,7 @@ Download the blackJack directory.
 Open a new workspace in Ganache, the first user there will be the "admin".
 Connect to metamask with the first user from the Ganache workspace.
 
-Open cmd, direct to the bjEther directory and execute the following commands:
+Open cmd, navigate to the bjEther directory and execute the following commands:
 1. "truffle compile" - This will compile the contract
 2. "truffle migrate" - This will upload the contract to the Ganache blockchain.
 3. "npm run dev" - This will run the server written in index.html.
